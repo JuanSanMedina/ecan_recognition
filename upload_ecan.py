@@ -1,15 +1,11 @@
 import requests
-import socket
 # from pprint import pprint
+from socket import socket, SOCK_DGRAM, AF_INET 
 
-print socket.gethostname()
+s = socket(AF_INET, SOCK_DGRAM) 
+s.connect(('google.com', 0)) 
+ip = str(s.getsockname()[0]) 
 
-s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-s.connect(("gmail.com",80))
-print(s.getsockname()[0])
-s.close()
-
-# ip = str(socket.gethostbyname(socket.gethostname()))
 # url = 'http://127.0.0.1:8000/ecan/upload-ecan/'
 # # url = 'http://ecan-recognition.herokuapp.com/ecan/upload/'
 
