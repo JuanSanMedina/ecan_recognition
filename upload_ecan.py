@@ -1,16 +1,16 @@
+
 import requests
 import sys
 
 # import socket
 # from pprint import pprint
-
 # s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 # s.connect(("goolge.com",0))
 # ip = str(s.getsockname()[0])
 # s.close()
 # print ip
-
 # ip = str(socket.gethostbyname(socket.gethostname()))
+# from pprint import pprint
 # url = 'http://127.0.0.1:8000/ecan/upload-ecan/'
 	
 def send(ip):	
@@ -19,5 +19,4 @@ def send(ip):
 	r = requests.post(url, data = data)
 	print r.text
 
-#if __name__ = "__main__":
 send(sys.argv[1])
