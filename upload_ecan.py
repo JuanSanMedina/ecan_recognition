@@ -1,19 +1,23 @@
 import requests
-import socket
+import sys
+
+# import socket
 # from pprint import pprint
 
-print socket.gethostname()
-
-s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-s.connect(("gmail.com",80))
-print(s.getsockname()[0])
-s.close()
+# s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+# s.connect(("goolge.com",0))
+# ip = str(s.getsockname()[0])
+# s.close()
+# print ip
 
 # ip = str(socket.gethostbyname(socket.gethostname()))
 # url = 'http://127.0.0.1:8000/ecan/upload-ecan/'
-# # url = 'http://ecan-recognition.herokuapp.com/ecan/upload/'
+	
+def send(ip):	
+	url = 'http://ecan-recognition.herokuapp.com/ecan/upload-ecan/'
+	data = {'pk':'1', 'address':'CUSP', 'latitude':3.0, 'longitude':2.0, 'ip': ip}
+	r = requests.post(url, data = data)
+	print r.text
 
-# data = {'pk':'1', 'address':'1', 'latitude':2.0, 'longitude':2.0, 'ip': ip}
-
-# r = requests.post(url, data = data)
-# print r.text
+#if __name__ = "__main__":
+send(sys.argv[1])
