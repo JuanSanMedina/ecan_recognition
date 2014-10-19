@@ -13,11 +13,11 @@ for device in devices:
 				print "scale id:" + id + " serial: "+ serialno
 			if debug:
 				print ("device serial:    <" + str(usb.util.get_string(device,256,3))) + ">"
-			# set USB device endpoint here
+			## set USB device endpoint here
 			endpoint = device[0][(0,0)][0]
 			# read a data packet
 			attempts = 10
-			data = None
+			data = None                  
 			while data is None:# and attempts > 0:
 				try:
 					data = device.read(endpoint.bEndpointAddress, endpoint.wMaxPacketSize)
@@ -43,7 +43,7 @@ for device in devices:
 				print "raw reading '" + reading +"'"
 			readval = float(reading.split(" ")[0])
 			readunit = reading.split(" ")[1]
-			# if the units are ounces ("oz") then convert to "g"
+			## if the units are ounces ("oz") then convert to "g"
 			if readunit == "oz" and readval !=0:
 				readval = readval*28.3495
 				if debug:
@@ -52,5 +52,3 @@ for device in devices:
 				print "current weight : '" + str(readval) +"' "+readunit
 			if debug:
 				print "current time   : "+strftime("%Y-%m-%d %H:%M:%S", localtime())
-	except: 
-		print 'juan'
