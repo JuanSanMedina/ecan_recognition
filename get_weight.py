@@ -1,14 +1,17 @@
+import usb.core
 VENDOR_ID = 0x0922
 devices = usb.core.find(find_all=True, idVendor=VENDOR_ID)
-
+print devices 
 for device in devices:
 	if device.is_kernel_driver_active(0) is True:
 		device.detach_kernel_driver(0)
 	devbus = str(device.bus)
 	devaddr = str(device.address)
 	productid=str(device.idProduct)
+	print devbus, devaddr, productid
 	try:
 		if str(usb.util.get_string(device,256,3)) == serialno:
+			print str(usb.util.get_string(device,256,3)) == serialno
 			if debug:
 				print "scale id:" + id + " serial: "+ serialno
 			if debug:
@@ -32,6 +35,7 @@ for device in devices:
 			# The raw scale array data
 			#print data
 			raw_weight = data[4] + (256 * data[5])
+			print raw_weight
 			if data[2] == DATA_MODE_OUNCES:
 				ounces = raw_weight * 0.1
 				weight = "%s oz" % ounces
