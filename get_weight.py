@@ -1,60 +1,37 @@
 import usb.core
-VENDOR_ID = 0x0922
-devices = usb.core.find(find_all=True, idVendor=VENDOR_ID)
-print devices 
-for device in devices:
-	if device.is_kernel_driver_active(0) is True:
-		device.detach_kernel_driver(0)
-	devbus = str(device.bus)
-	devaddr = str(device.address)
-	productid=str(device.idProduct)
-	print devbus, devaddr, productid
-	try:
-		if str(usb.util.get_string(device,256,3)) == serialno:
-			print str(usb.util.get_string(device,256,3)) == serialno
-			if debug:
-				print "scale id:" + id + " serial: "+ serialno
-			if debug:
-				print ("device serial:    <" + str(usb.util.get_string(device,256,3))) + ">"
-			# set USB device endpoint here
-			endpoint = device[0][(0,0)][0]
-			# read a data packet
-			attempts = 10
+import usb.util
+
+
+def get():
+	VENDOR_ID = 0x0922
+	PRODUCT_ID = 0x8004
+	# find the USB device
+	device = usb.core.find(idVendor=VENDOR_ID, idProduct=PRODUCT_ID)
+	# use the first/default configuration
+	device.set_configuration()
+	# first endpoint
+	endpoint = device[0][(0,0)][0]
+	# read a data packet
+	attempts = 10
+	data = None
+	while data is None and attempts > 0:
+		try:
+			data = device.read(endpoint.bEndpointAddress, endpoint.wMaxPacketSize)
+		except usb.core.USBError as e:
 			data = None
-			while data is None:# and attempts > 0:
-				try:
-					data = device.read(endpoint.bEndpointAddress, endpoint.wMaxPacketSize)
-					if debug:
-						print "data: "+str(data)
-				except usb.core.USBError as e:
-					data = None
-					if e.args == ('Operation timed out',):
-						attempts -= 1
-						print e
-						continue
-			# The raw scale array data
-			#print data
-			raw_weight = data[4] + (256 * data[5])
-			print raw_weight
-			if data[2] == DATA_MODE_OUNCES:
-				ounces = raw_weight * 0.1
-				weight = "%s oz" % ounces
-			elif data[2] == DATA_MODE_GRAMS:
-				grams = raw_weight
-				weight = "%s g" % grams
-			reading = weight
-			if debug:
-				print "raw reading '" + reading +"'"
-			readval = float(reading.split(" ")[0])
-			readunit = reading.split(" ")[1]
-			# if the units are ounces ("oz") then convert to "g"
-			if readunit == "oz" and readval !=0:
-				readval = readval*28.3495
-				if debug:
-					print "converted oz to g"
-			if debug:
-				print "current weight : '" + str(readval) +"' "+readunit
-			if debug:
-				print "current time   : "+strftime("%Y-%m-%d %H:%M:%S", localtime())
-	except: 
-		print 'juan'
+			if e.args == ('Operation timed out',):
+				attempts -= 1
+				continue
+
+	DATA_MODE_GRAMS = 2
+	DATA_MODE_OUNCES = 11
+
+	raw_weight = data[4] + data[5] * 256
+	if data[2] == DATA_MODE_OUNCES:
+		ounces = raw_weight * 0.1
+		weight = ounces/0.035274
+	elif data[2] == DATA_MODE_GRAMS:
+		grams = raw_weight
+		weight = grams
+	print weight, type(weight)
+	return weight
