@@ -12,7 +12,7 @@ def take_ir():
 		camera.capture('ir.jpg')
 		camera.stop_preview()
 
-def take_color():
+def take_usb():
 	pygame.camera.init()
 	cam = pygame.camera.Camera(pygame.camera.list_cameras()[0])
 	cam.start()
@@ -21,7 +21,7 @@ def take_color():
 	pygame.camera.quit()
 
 take_ir()
-take_color()
+take_usb()
 
 data = {'ecan':'1', 'weight':get_weight.get()}
 files = {'image_color': open('color.jpg', 'rb'),'image_ir':open('ir.jpg', 'rb')}
