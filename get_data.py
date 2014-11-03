@@ -5,12 +5,10 @@ import pygame.image
 import get_weight
 import requests
 
-def take_ir():
+def take_picamera():
 	with picamera.PiCamera() as camera:
-		camera.start_preview()
-		time.sleep(1)
+		camera.led = False
 		camera.capture('ir.jpg')
-		camera.stop_preview()
 
 def take_usb():
 	pygame.camera.init()
@@ -20,7 +18,7 @@ def take_usb():
 	pygame.image.save(img, "color.jpg")
 	pygame.camera.quit()
 
-take_ir()
+take_picamera()
 take_usb()
 
 data = {'ecan':'1', 'weight':get_weight.get()}
