@@ -23,15 +23,15 @@ def get():
 				attempts -= 1
 				continue
 
-	DATA_MODE_GRAMS = 2
-	DATA_MODE_OUNCES = 11
-
+#	DATA_MODE_GRAMS = 2
+#	DATA_MODE_OUNCES = 11
 	raw_weight = data[4] + data[5] * 256
-	if data[2] == DATA_MODE_OUNCES:
-		ounces = raw_weight * 0.1
-		weight = ounces/0.035274
-	elif data[2] == DATA_MODE_GRAMS:
-		grams = raw_weight
-		weight = grams
-	print weight, type(weight)
-	return weight
+#	if data[2] == DATA_MODE_OUNCES:
+#		ounces = raw_weight * 0.1
+#		weight = ounces
+#	elif data[2] == DATA_MODE_GRAMS:
+#		grams = raw_weight
+#		weight = grams
+#	print weight, type(weight)
+	device.detach_kernel_driver(0)
+	return float(raw_weight)

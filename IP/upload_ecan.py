@@ -1,4 +1,3 @@
-
 import requests
 import sys
 
@@ -15,7 +14,7 @@ import sys
 	
 def send(ip):	
 	url = 'http://ecan-recognition.herokuapp.com/ecan/upload-ecan/'
-	data = {'pk':'1', 'address':'CUSP', 'latitude':3.0, 'longitude':2.0, 'ip': ip}
+	data = {'pk':'1', 'address':'CUSP at PPP', 'latitude':1.0, 'longitude':1.0, 'ip': ip}
 	r = requests.post(url, data = data)
 	print r.text
 
