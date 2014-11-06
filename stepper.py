@@ -51,3 +51,5 @@ while True:
 	forward(int(delay) / 1000.0, int(steps))
 	steps = raw_input("How many steps backwards? ")
 	backwards(int(delay) / 1000.0, int(steps))
+
+GPIO.cleanup()
