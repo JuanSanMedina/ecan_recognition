@@ -1,7 +1,7 @@
 import RPi.GPIO as GPIO
 import time
 
-def control():
+class stepper():
 	GPIO.setmode(GPIO.BCM)
 
 	enable_pin = 23
@@ -53,4 +53,4 @@ def control():
 	# 	steps = raw_input("How many steps backwards? ")
 	# 	backwards(int(delay) / 1000.0, int(steps))
 
-	GPIO.cleanup()
+	# GPIO.cleanup()
