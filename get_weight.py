@@ -7,6 +7,10 @@ def get():
 	PRODUCT_ID = 0x8004
 	# find the USB device
 	device = usb.core.find(idVendor=VENDOR_ID, idProduct=PRODUCT_ID)
+	reattach = False
+	if device.is_kernel_driver_active(0):
+		reattach = True
+		device.detach_kernel_driver(0)
 	# use the first/default configuration
 	device.set_configuration()
 	# first endpoint
