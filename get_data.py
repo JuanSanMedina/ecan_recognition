@@ -87,7 +87,7 @@ def get_data(samples, item_class):
 			# url = 'http://127.0.0.1:8000/ecan/upload/'
 			# url = 'http://ecan-recognition.herokuapp.com/ecan/upload/'
 			# r = requests.post(url, data = data, files=files)
-			forward(10, steps)
+			forward(5, steps)
 	cam.release()
 	return 'done'
 
