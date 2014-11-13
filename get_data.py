@@ -76,9 +76,9 @@ def get_data(samples, item_class):
 	cam = cv2.VideoCapture(0)
 	with picamera.PiCamera() as camera:
 		steps = int(512 /samples)
-		for s in range(samples- 1):
+		for s in range(samples):
 			print 'juan'
-			# camera.capture('pi_cam%s' %s + '.jpg')
+			camera.capture('pi_cam%s' %s + '.jpg')
 			# s, img = cam.read()
 			# if s: cv2.imwrite('usb_cam%s' %s + '.jpg',img) #save image
 			# data = {'ecan':'1', 'weight':get_weight.get()}
