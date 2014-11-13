@@ -73,7 +73,7 @@ def take_picamera():
 # take_usb()
 
 def get_data(samples, item_class):
-	# cam = cv2.VideoCapture(0)
+	cam = cv2.VideoCapture(0)
 	# with picamera.PiCamera() as camera:
 	# 	steps = int(512 /samples)
 	# 	for s in range(samples- 1):
@@ -86,7 +86,7 @@ def get_data(samples, item_class):
 	# 		# url = 'http://ecan-recognition.herokuapp.com/ecan/upload/'
 	# 		# r = requests.post(url, data = data, files=files)
 	# 		forward(10, steps)
-	# cam.release()
+	cam.release()
 	return 'done'
 
 cont = 'y'
