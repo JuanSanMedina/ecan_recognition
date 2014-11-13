@@ -81,7 +81,7 @@ def get_data(samples, item_class):
 		for s in range(samples):
 			print 'juan'
 			camera.capture('pi_cam%s' %s + '.jpg')
-			time.sleep()
+			time.sleep(2/1000)
 			img = cam.get_image()
 			pygame.image.save(img, 'usb_cam%s' %s + '.jpg')
 			# s, img = cam.read()
