@@ -103,7 +103,7 @@ def get_data(samples, item_class):
 			# r = requests.post(url, data = data, files=files)
 			forward(10, steps)
 		cam.release()
-		return 'done'
+	return 'done'
 
 cont = 'y'
 while cont != 'n':
