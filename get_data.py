@@ -91,7 +91,7 @@ def get_data(samples, item_class):
 		# Finally, take several photos with the fixed settings
 		if samples > 512 or samples < 0:
 			samples = 512
-		steps = int(512 /samples*512)
+		steps = int(512 /samples)
 		for s in range(samples- 1):
 			camera.capture('pi_cam%s' %s + '.jpg')
 			s, img = cam.read()
@@ -108,7 +108,7 @@ cont = 'y'
 while cont != 'n':
 	samples = raw_input("Number of samples?")
 	item_class = raw_input("What class? ")
-	get_data(samples, item_class)
+	get_data(int(samples), item_class)
 	cont = raw_input("Continue? [y/n] ")
 	if cont != 'y' or cont != 'n':
 		cont = 'n'
