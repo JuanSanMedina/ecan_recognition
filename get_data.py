@@ -1,7 +1,7 @@
 import time
 import picamera
-# import pygame.camera
-# import pygame.image
+import pygame.camera
+import pygame.image
 import get_weight
 import requests
 import RPi.GPIO as GPIO
@@ -73,15 +73,19 @@ def take_picamera():
 # take_usb()
 
 def get_data(samples, item_class):
-	cam = cv2.VideoCapture(0)
+	pygame.camera.init()
+	cam = pygame.camera.Camera(pygame.camera.list_cameras()[0])
+	# cam = cv2.VideoCapture(0)	
 	with picamera.PiCamera() as camera:
 		steps = int(512 /samples)
 		for s in range(samples):
 			print 'juan'
 			camera.capture('pi_cam%s' %s + '.jpg')
-			time.sleep(2/1000)
-			s, img = cam.read()
-			if s: cv2.imwrite('usb_cam%s' %s + '.jpg',img) #save image
+			time.sleep()
+			img = cam.get_image()
+			pygame.image.save(img, 'usb_cam%s' %s + '.jpg')
+			# s, img = cam.read()
+			# if s: cv2.imwrite('usb_cam%s' %s + '.jpg',img) #save image
 			# data = {'ecan':'1', 'weight':get_weight.get()}
 			# files = {'pi_im': open('pi_im.jpg', 'rb'),'usb_im':open('usb_im.jpg', 'rb')}
 			# url = 'http://127.0.0.1:8000/ecan/upload/'
