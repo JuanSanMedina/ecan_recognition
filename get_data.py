@@ -77,6 +77,7 @@ def get_data(samples, item_class):
 	with picamera.PiCamera() as camera:
 		steps = int(512 /samples)
 		for s in range(samples- 1):
+			print 'juan'
 			# camera.capture('pi_cam%s' %s + '.jpg')
 			# s, img = cam.read()
 			# if s: cv2.imwrite('usb_cam%s' %s + '.jpg',img) #save image
