@@ -79,8 +79,9 @@ def get_data(samples, item_class):
 		for s in range(samples):
 			print 'juan'
 			camera.capture('pi_cam%s' %s + '.jpg')
-			# s, img = cam.read()
-			# if s: cv2.imwrite('usb_cam%s' %s + '.jpg',img) #save image
+			time.sleep(2/1000)
+			s, img = cam.read()
+			if s: cv2.imwrite('usb_cam%s' %s + '.jpg',img) #save image
 			# data = {'ecan':'1', 'weight':get_weight.get()}
 			# files = {'pi_im': open('pi_im.jpg', 'rb'),'usb_im':open('usb_im.jpg', 'rb')}
 			# url = 'http://127.0.0.1:8000/ecan/upload/'
