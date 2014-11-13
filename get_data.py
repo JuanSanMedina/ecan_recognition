@@ -93,9 +93,9 @@ def get_data(samples, type):
 			samples = 512
 		steps = int(512 /samples*512)
 		for s in range(samples- 1):
-			camera.capture('ir.jpg')
+			camera.capture('pi_cam%s' %s + '.jpg')
 			s, img = cam.read()
-			if s: cv2.imwrite("filename.jpg",img) #save image
+			if s: cv2.imwrite('usb_cam.%s' %s + '.jpg',img) #save image
 			# data = {'ecan':'1', 'weight':get_weight.get()}
 			# files = {'pi_im': open('pi_im.jpg', 'rb'),'usb_im':open('usb_im.jpg', 'rb')}
 			# url = 'http://127.0.0.1:8000/ecan/upload/'
@@ -103,6 +103,15 @@ def get_data(samples, type):
 			# r = requests.post(url, data = data, files=files)
 			forward(10, steps)
 		cam.release()
+
+
+# while True:
+# 	delay = raw_input("Delay between steps (milliseconds)?")
+# 	steps = raw_input("How many steps forward? ")
+# 	forward(int(delay) / 1000.0, int(steps))
+# 	steps = raw_input("How many steps backwards? ")
+# 	backwards(int(delay) / 1000.0, int(steps))
+
 
 # camera.capture_sequence(['image%02d.jpg' % i for i in range(10)])
 # data = {'ecan':'1', 'weight':get_weight.get()}
