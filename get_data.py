@@ -72,7 +72,7 @@ def take_usb():
 take_picamera()
 take_usb()
 
-def get_data(samples, type):
+def get_data(samples, item_class):
 	cam = cv2.VideoCapture(0)
 	with picamera.PiCamera() as camera:
 		
@@ -104,14 +104,14 @@ def get_data(samples, type):
 			forward(10, steps)
 		cam.release()
 
-
-# while True:
-# 	delay = raw_input("Delay between steps (milliseconds)?")
-# 	steps = raw_input("How many steps forward? ")
-# 	forward(int(delay) / 1000.0, int(steps))
-# 	steps = raw_input("How many steps backwards? ")
-# 	backwards(int(delay) / 1000.0, int(steps))
-
+cont = 'y'
+while cont != 'n':
+	samples = raw_input("Number of samples?")
+	item_class = raw_input("What class? ")
+	get_data(samples, item_class)
+	cont = raw_input("Continue? [y/n] ")
+	if cont != 'y' or cont != 'n':
+		cont = 'n'
 
 # camera.capture_sequence(['image%02d.jpg' % i for i in range(10)])
 # data = {'ecan':'1', 'weight':get_weight.get()}
