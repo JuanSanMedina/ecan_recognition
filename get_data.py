@@ -1,7 +1,7 @@
 import time
 import picamera
-import pygame.camera
-import pygame.image
+# import pygame.camera
+# import pygame.image
 import get_weight
 import requests
 import RPi.GPIO as GPIO
@@ -61,16 +61,16 @@ def take_picamera():
 		camera.led = False
 		camera.capture('ir.jpg')
 
-def take_usb():
-	pygame.camera.init()
-	cam = pygame.camera.Camera(pygame.camera.list_cameras()[0])
-	cam.start()
-	img = cam.get_image()
-	pygame.image.save(img, "color.jpg")
-	pygame.camera.quit()
+# def take_usb():
+# 	pygame.camera.init()
+# 	cam = pygame.camera.Camera(pygame.camera.list_cameras()[0])
+# 	cam.start()
+# 	img = cam.get_image()
+# 	pygame.image.save(img, "color.jpg")
+# 	pygame.camera.quit()
 
-take_picamera()
-take_usb()
+# take_picamera()
+# take_usb()
 
 def get_data(samples, item_class):
 	cam = cv2.VideoCapture(0)
