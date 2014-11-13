@@ -80,7 +80,7 @@ def get_data(samples, item_class):
 			print 'juan'
 			cam = cv2.VideoCapture(0)	
 			camera.capture('pi_cam%s' %s + '.jpg')
-			time.sleep()
+			time.sleep(10/1000.0)
 			s, img = cam.read()
 			if s: cv2.imwrite('usb_cam%s' %s + '.jpg',img) #save image
 			# data = {'ecan':'1', 'weight':get_weight.get()}
@@ -88,8 +88,8 @@ def get_data(samples, item_class):
 			# url = 'http://127.0.0.1:8000/ecan/upload/'
 			# url = 'http://ecan-recognition.herokuapp.com/ecan/upload/'
 			# r = requests.post(url, data = data, files=files)
-			forward(10, steps)
 			cam.release()
+			forward(10, steps)
 	return 'done'
 
 cont = 'y'
