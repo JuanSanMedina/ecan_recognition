@@ -6,7 +6,7 @@ import get_weight
 import requests
 import RPi.GPIO as GPIO
 import time
-from cv2 import cv2
+import cv2
 
 GPIO.setmode(GPIO.BCM)
 
