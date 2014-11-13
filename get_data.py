@@ -73,35 +73,19 @@ def take_picamera():
 # take_usb()
 
 def get_data(samples, item_class):
-	cam = cv2.VideoCapture(0)
-	with picamera.PiCamera() as camera:
-		
-		# camera.resolution = (1280, 720)
-		# camera.framerate = 30
-		# # Give the camera's auto-exposure and auto-white-balance algorithms
-		# # some time to measure the scene and determine appropriate values
-		# camera.iso = 200
-		# time.sleep(2)
-		# # Now fix the values
-		# camera.shutter_speed = camera.exposure_speed
-		# camera.exposure_mode = 'off'
-		# g = camera.awb_gains
-		# camera.awb_mode = 'off'
-		# camera.awb_gains = g
-		# Finally, take several photos with the fixed settings
-		# if samples > 512 or samples < 0:
-		# 	samples = 512
-		steps = int(512 /samples)
-		for s in range(samples- 1):
-			camera.capture('pi_cam%s' %s + '.jpg')
-			s, img = cam.read()
-			if s: cv2.imwrite('usb_cam%s' %s + '.jpg',img) #save image
-			# data = {'ecan':'1', 'weight':get_weight.get()}
-			# files = {'pi_im': open('pi_im.jpg', 'rb'),'usb_im':open('usb_im.jpg', 'rb')}
-			# url = 'http://127.0.0.1:8000/ecan/upload/'
-			# url = 'http://ecan-recognition.herokuapp.com/ecan/upload/'
-			# r = requests.post(url, data = data, files=files)
-			forward(10, steps)
+	# cam = cv2.VideoCapture(0)
+	# with picamera.PiCamera() as camera:
+	# 	steps = int(512 /samples)
+	# 	for s in range(samples- 1):
+	# 		camera.capture('pi_cam%s' %s + '.jpg')
+	# 		s, img = cam.read()
+	# 		if s: cv2.imwrite('usb_cam%s' %s + '.jpg',img) #save image
+	# 		# data = {'ecan':'1', 'weight':get_weight.get()}
+	# 		# files = {'pi_im': open('pi_im.jpg', 'rb'),'usb_im':open('usb_im.jpg', 'rb')}
+	# 		# url = 'http://127.0.0.1:8000/ecan/upload/'
+	# 		# url = 'http://ecan-recognition.herokuapp.com/ecan/upload/'
+	# 		# r = requests.post(url, data = data, files=files)
+	# 		forward(10, steps)
 	# cam.release()
 	return 'done'
 
@@ -121,3 +105,21 @@ while cont != 'n':
 # url = 'http://ecan-recognition.herokuapp.com/ecan/upload/'
 # r = requests.post(url, data = data, files=files)
 # print r.text
+
+
+
+		# camera.resolution = (1280, 720)
+		# camera.framerate = 30
+		# # Give the camera's auto-exposure and auto-white-balance algorithms
+		# # some time to measure the scene and determine appropriate values
+		# camera.iso = 200
+		# time.sleep(2)
+		# # Now fix the values
+		# camera.shutter_speed = camera.exposure_speed
+		# camera.exposure_mode = 'off'
+		# g = camera.awb_gains
+		# camera.awb_mode = 'off'
+		# camera.awb_gains = g
+		# Finally, take several photos with the fixed settings
+		# if samples > 512 or samples < 0:
+		# 	samples = 512
