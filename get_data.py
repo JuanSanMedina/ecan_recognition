@@ -75,12 +75,21 @@ def take_picamera():
 def get_data(samples, item_class):
 	
 	with picamera.PiCamera() as camera:
+		camera.resolution = (1280, 1024)
+		camera.iso = 200
+		time.sleep(2)
+		# camera.shutter_speed = camera.exposure_speed
+		# camera.exposure_mode = 'off'
+		# g = camera.awb_gains
 		steps = int(512 /samples)
 		for s in range(samples):
 			print 'juan'
 			cam = cv2.VideoCapture(0)	
+			cam.set(3,1280)
+			cam.set(4,1024)
 			camera.capture('pi_cam/pi_cam%s' %s + '.jpg')
 			# time.sleep(10/1000.0)
+			cam.set
 			correct, img = cam.read()
 			if correct: cv2.imwrite('usb_cam/usb_cam%s' %s + '.jpg',img) #save image
 			# data = {'ecan':'1', 'weight':get_weight.get()}
@@ -89,7 +98,7 @@ def get_data(samples, item_class):
 			# url = 'http://ecan-recognition.herokuapp.com/ecan/upload/'
 			# r = requests.post(url, data = data, files=files)
 			cam.release()
-			forward(5, steps)
+			# forward(5, steps)
 	
 	return 'done'
 
