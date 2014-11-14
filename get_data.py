@@ -76,11 +76,13 @@ def get_data(samples, item_class):
 	
 	with picamera.PiCamera() as camera:
 		camera.resolution = (1280, 1024)
-		camera.iso = 200
+		camera.iso = 300
 		time.sleep(2)
-		# camera.shutter_speed = camera.exposure_speed
-		# camera.exposure_mode = 'off'
-		# g = camera.awb_gains
+		camera.shutter_speed = camera.exposure_speed
+		camera.exposure_mode = 'off'
+		g = camera.awb_gains
+		camera.awb_mode = 'off'
+		camera.awb_gains = g
 		steps = int(512 /samples)
 		for s in range(samples):
 			print 'juan'
