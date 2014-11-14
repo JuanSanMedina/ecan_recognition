@@ -78,9 +78,9 @@ def get_data(samples, item_class):
 		camera.resolution = (1280, 1024)
 		camera.iso = 200
 		camera.framerate = 30
-		time.sleep(10)
-		camera.shutter_speed = camera.exposure_speed
-		camera.exposure_mode = 'off'
+		time.sleep(2)
+		# camera.shutter_speed = camera.exposure_speed
+		# camera.exposure_mode = 'off'
 		g = camera.awb_gains
 		camera.awb_mode = 'off'
 		camera.awb_gains = g
