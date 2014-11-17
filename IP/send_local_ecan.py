@@ -17,4 +17,4 @@ def send(ip):
 	r = requests.post(url, data = data)
 	print r.text
 
-send(sys.argv[1])
+send('128.122.72.106')
