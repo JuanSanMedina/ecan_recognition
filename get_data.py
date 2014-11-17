@@ -88,6 +88,7 @@ def get_data(samples, item_class):
 			files = {'image_picam': open('pi_cam/pi_im.jpg', 'rb')}
 			url = 'http://127.0.0.1:8000/ecan/upload/'
 			# url = 'http://ecan-recognition.herokuapp.com/ecan/upload/'
+			print data
 			r = requests.post(url, data = data, files=files)
 			print r.text
 			# cam.release()
