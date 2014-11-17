@@ -86,9 +86,9 @@ def get_data(samples, item_class):
 			# if correct: cv2.imwrite('usb_cam/usb_cam%s' %s + '.jpg',img) #save image
 			data = {'ecan':'1', 'weight':get_weight.get(), 'item_class':item_class}
 			files = {'image_picam': open('pi_cam/pi_im.jpg', 'rb')}
-			url = 'http://127.0.0.1:8000/ecan/upload/'
+			url = 'http://128.122.72.105:8000/ecan/upload/'
 			# url = 'http://ecan-recognition.herokuapp.com/ecan/upload/'
-			print data
+			# print data
 			r = requests.post(url, data = data, files=files)
 			print r.text
 			# cam.release()
