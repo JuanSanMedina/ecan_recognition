@@ -61,21 +61,9 @@ def take_picamera():
 		camera.led = False
 		camera.capture('ir.jpg')
 
-# def take_usb():
-# 	pygame.camera.init()
-# 	cam = pygame.camera.Camera(pygame.camera.list_cameras()[0])
-# 	cam.start()
-# 	img = cam.get_image()
-# 	pygame.image.save(img, "color.jpg")
-# 	pygame.camera.quit()
-
-# take_picamera()
-# take_usb()
-
 def get_data(samples, item_class):
-	
 	with picamera.PiCamera() as camera:
-		camera.resolution = (1280, 1024)
+		camera.resolution = (640, 480)
 		camera.iso = 200
 		camera.framerate = 30
 		time.sleep(2)
@@ -87,28 +75,29 @@ def get_data(samples, item_class):
 		steps = int(512 /samples)
 		for s in range(samples):
 			print 'juan'
-			cam = cv2.VideoCapture(0)	
-			cam.set(3,1280)
-			cam.set(4,1024)
-			cam.set(13,20) #saturation
+			# cam = cv2.VideoCapture(0)	
+			# cam.set(3,1280)
+			# cam.set(4,1024)
+			# cam.set(13,70) #saturation
 			camera.capture('pi_cam/pi_cam%s' %s + '.jpg')
 			# time.sleep(10/1000.0)
-			cam.set
-			correct, img = cam.read()
-			if correct: cv2.imwrite('usb_cam/usb_cam%s' %s + '.jpg',img) #save image
-			# data = {'ecan':'1', 'weight':get_weight.get()}
-			# files = {'pi_im': open('pi_im.jpg', 'rb'),'usb_im':open('usb_im.jpg', 'rb')}
-			# url = 'http://127.0.0.1:8000/ecan/upload/'
+			# cam.set
+			# correct, img = cam.read()
+			# if correct: cv2.imwrite('usb_cam/usb_cam%s' %s + '.jpg',img) #save image
+			data = {'ecan':'1', 'weight':get_weight.get(), 'item_class':item_class}
+			files = {'pi_im': open('pi_im.jpg', 'rb')}
+			url = 'http://127.0.0.1:8000/ecan/upload/'
 			# url = 'http://ecan-recognition.herokuapp.com/ecan/upload/'
-			# r = requests.post(url, data = data, files=files)
-			cam.release()
+			r = requests.post(url, data = data, files=files)
+			print r.text
+			# cam.release()
 			forward(5, steps)
 	return 'done'
 
 cont = 'y'
 while cont == 'y':
 	samples = raw_input("Number of samples?")
-	# item_class = raw_input("What class? ")
+	item_class = raw_input("What class? ")
 	get_data(int(samples), 'erase this')
 	cont = raw_input("Continue? [y/n] ")
 	if cont != 'y' or cont != 'n':
@@ -119,11 +108,22 @@ GPIO.cleanup()
 # camera.capture_sequence(['image%02d.jpg' % i for i in range(10)])
 # data = {'ecan':'1', 'weight':get_weight.get()}
 # files = {'image_color': open('color.jpg', 'rb'),'image_ir':open('ir.jpg', 'rb')}
-# #url = 'http://127.0.0.1:8000/ecan/upload/'
-# url = 'http://ecan-recognition.herokuapp.com/ecan/upload/'
+# url = 'http://127.0.0.1:8000/ecan/upload/'
+# # url = 'http://ecan-recognition.herokuapp.com/ecan/upload/'
 # r = requests.post(url, data = data, files=files)
 # print r.text
 
+
+# def take_usb():
+# 	pygame.camera.init()
+# 	cam = pygame.camera.Camera(pygame.camera.list_cameras()[0])
+# 	cam.start()
+# 	img = cam.get_image()
+# 	pygame.image.save(img, "color.jpg")
+# 	pygame.camera.quit()
+
+# take_picamera()
+# take_usb()
 
 
 # camera.resolution = (1280, 720)
