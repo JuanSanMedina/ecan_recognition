@@ -79,13 +79,13 @@ def get_data(samples, item_class):
 			# cam.set(3,1280)
 			# cam.set(4,1024)
 			# cam.set(13,70) #saturation
-			camera.capture('pi_cam/pi_cam%s' %s + '.jpg')
+			camera.capture('pi_cam/pi_cam.jpg')
 			# time.sleep(10/1000.0)
 			# cam.set
 			# correct, img = cam.read()
 			# if correct: cv2.imwrite('usb_cam/usb_cam%s' %s + '.jpg',img) #save image
 			data = {'ecan':'1', 'weight':get_weight.get(), 'item_class':item_class}
-			files = {'pi_im': open('pi_im.jpg', 'rb')}
+			files = {'pi_im': open('pi_cam/pi_im.jpg', 'rb')}
 			url = 'http://127.0.0.1:8000/ecan/upload/'
 			# url = 'http://ecan-recognition.herokuapp.com/ecan/upload/'
 			r = requests.post(url, data = data, files=files)
