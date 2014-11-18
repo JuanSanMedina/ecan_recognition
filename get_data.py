@@ -81,8 +81,8 @@ def get_data(samples, item_class):
 			# cam.set(3,1280)
 			# cam.set(4,1024)
 			# cam.set(13,70) #saturation
-			# camera.capture('pi_cam/pi_im.jpg')
-			camera.capture()
+			camera.capture('pi_cam/pi_im.jpg')
+			# camera.capture()
 			# time.sleep(10/1000.0)
 			# cam.set
 			# correct, img = cam.read()
