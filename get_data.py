@@ -76,6 +76,7 @@ def get_data(samples, item_class):
 		# cam = cv2.VideoCapture(0)	
 		for s in range(samples):
 			print s
+			if s == 0: weight = get_weight.get()
 			# cam = cv2.VideoCapture(0)	
 			# cam.set(3,1280)
 			# cam.set(4,1024)
@@ -85,7 +86,7 @@ def get_data(samples, item_class):
 			# cam.set
 			# correct, img = cam.read()
 			# if correct: cv2.imwrite('usb_cam/usb_cam%s' %s + '.jpg',img) #save image
-			data = {'ecan':'1', 'weight':get_weight.get(), 'item_class':item_class}
+			data = {'ecan':'1', 'weight':weight, 'item_class':item_class}
 			files = {'image_picam': open('pi_cam/pi_im.jpg', 'rb')}
 			url = 'http://128.122.72.105:8000/ecan/upload/'
 			# url = 'http://ecan-recognition.herokuapp.com/ecan/upload/'
