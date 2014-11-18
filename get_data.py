@@ -62,6 +62,14 @@ def take_picamera():
 		camera.capture('ir.jpg')
 
 def get_data(samples, item_class):
+	cont = 'n'
+	print 'Prepare for back ground capture'
+	while cont != 'y':
+		cont = raw_input("ready? [y] ")
+		if cont != 'y':
+			cont = 'n'
+
+
 	with picamera.PiCamera() as camera:
 		camera.resolution = (640, 480)
 		camera.iso = 200
@@ -72,23 +80,44 @@ def get_data(samples, item_class):
 		g = camera.awb_gains
 		camera.awb_mode = 'off'
 		camera.awb_gains = g
+
+
+		camera.capture('pi_cam/bg_im.jpg')
+		data = {'ecan':'1'}
+		files = {'back_ground': open('pi_cam/bg_im.jpg', 'rb')}
+		url = 'http://128.122.72.105:8000/ecan/upload-back_ground/'
+		r = requests.post(url, data = data, files=files)
+		if r.json()['result'] == 'valid':
+			bg_pk =r.json()['id']
+			print r.json()['result'], 'Back ground id: ', r.json()['id']
+		else: return 'Operation not completed'
+
+
+		print 'Place item'
+		cont = 'n'
+		while cont != 'y':
+			cont = raw_input("ready? [y] ")
+			if cont != 'y':
+				cont = 'n'
+
+
 		steps = int(512 /samples)
 		# cam = cv2.VideoCapture(0)	
 		for s in range(samples):
 			print s
 			if s == 0: weight = get_weight.get()
+			camera.capture('pi_cam/pi_im.jpg')
+			data = {'ecan':'1', 'bg': bg_pk, 'weight':weight, 'item_class':item_class}
+			files = {'image_picam': open('pi_cam/pi_im.jpg', 'rb')}
+			url = 'http://128.122.72.105:8000/ecan/upload/'
 			# cam = cv2.VideoCapture(0)	
 			# cam.set(3,1280)
 			# cam.set(4,1024)
 			# cam.set(13,70) #saturation
-			camera.capture('pi_cam/pi_im.jpg')
 			# time.sleep(10/1000.0)
 			# cam.set
 			# correct, img = cam.read()
 			# if correct: cv2.imwrite('usb_cam/usb_cam%s' %s + '.jpg',img) #save image
-			data = {'ecan':'1', 'weight':weight, 'item_class':item_class}
-			files = {'image_picam': open('pi_cam/pi_im.jpg', 'rb')}
-			url = 'http://128.122.72.105:8000/ecan/upload/'
 			# url = 'http://ecan-recognition.herokuapp.com/ecan/upload/'
 			# print data
 			r = requests.post(url, data = data, files=files)
@@ -102,7 +131,8 @@ cont = 'y'
 while cont == 'y':
 	samples = raw_input("Number of samples?")
 	item_class = raw_input("What class? ")
-	get_data(int(samples), item_class)
+	result = get_data(int(samples), item_class)
+	print result
 	cont = raw_input("Continue? [y/n] ")
 	if cont != 'y' and cont != 'n':
 		cont = 'n'

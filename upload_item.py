@@ -8,6 +8,6 @@ data = {'ecan':'1', 'weight':'30', 'item_class':'1'}
 files = {'image_picam': open('pi.jpg', 'rb')}
 
 r = requests.post(url, data = data, files=files)
-print r.text
+print r.json()['result']
 
 
