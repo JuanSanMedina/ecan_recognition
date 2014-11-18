@@ -76,13 +76,12 @@ def get_data(samples, item_class):
 		# cam = cv2.VideoCapture(0)	
 		for s in range(samples):
 			print s
-			# if s == 0: weight = get_weight.get()
+			if s == 0: weight = get_weight.get()
 			# cam = cv2.VideoCapture(0)	
 			# cam.set(3,1280)
 			# cam.set(4,1024)
 			# cam.set(13,70) #saturation
 			camera.capture('pi_cam/pi_im.jpg')
-			# camera.capture()
 			# time.sleep(10/1000.0)
 			# cam.set
 			# correct, img = cam.read()
@@ -90,10 +89,10 @@ def get_data(samples, item_class):
 			data = {'ecan':'1', 'weight':weight, 'item_class':item_class}
 			files = {'image_picam': open('pi_cam/pi_im.jpg', 'rb')}
 			url = 'http://128.122.72.105:8000/ecan/upload/'
-			url = 'http://ecan-recognition.herokuapp.com/ecan/upload/'
+			# url = 'http://ecan-recognition.herokuapp.com/ecan/upload/'
+			# print data
 			r = requests.post(url, data = data, files=files)
 			print r.text
-			# print data
 			
 			forward(5, steps)
 		# cam.release()
