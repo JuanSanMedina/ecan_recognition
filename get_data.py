@@ -97,6 +97,7 @@ def get_data(samples, item_class):
 			# if correct: cv2.imwrite('usb_cam/usb_cam%s' %s + '.jpg',img) #save image
 			forward(5, steps)
 		for e in im:
+			print e
 			cv2.imwrite('usb_cam/pi_im.jpg',e[1]) #save image
 			data = {'ecan':'1', 'weight':weight, 'item_class':item_class}
 			files = {'image_picam': open('pi_cam/pi_im.jpg', 'rb')}
