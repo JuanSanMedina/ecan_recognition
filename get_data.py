@@ -73,6 +73,7 @@ def get_data(samples, item_class):
 		camera.awb_mode = 'off'
 		camera.awb_gains = g
 		steps = int(512 /samples)
+		cam = cv2.VideoCapture(0)	
 		for s in range(samples):
 			print 'juan'
 			# cam = cv2.VideoCapture(0)	
@@ -82,17 +83,18 @@ def get_data(samples, item_class):
 			camera.capture('pi_cam/pi_im.jpg')
 			# time.sleep(10/1000.0)
 			# cam.set
-			# correct, img = cam.read()
-			# if correct: cv2.imwrite('usb_cam/usb_cam%s' %s + '.jpg',img) #save image
-			data = {'ecan':'1', 'weight':get_weight.get(), 'item_class':item_class}
-			files = {'image_picam': open('pi_cam/pi_im.jpg', 'rb')}
-			url = 'http://128.122.72.105:8000/ecan/upload/'
+			correct, img = cam.read()
+			if correct: cv2.imwrite('usb_cam/usb_cam%s' %s + '.jpg',img) #save image
+			# data = {'ecan':'1', 'weight':get_weight.get(), 'item_class':item_class}
+			# files = {'image_picam': open('pi_cam/pi_im.jpg', 'rb')}
+			# url = 'http://128.122.72.105:8000/ecan/upload/'
 			# url = 'http://ecan-recognition.herokuapp.com/ecan/upload/'
 			# print data
-			r = requests.post(url, data = data, files=files)
-			print r.text
-			# cam.release()
+			# r = requests.post(url, data = data, files=files)
+			# print r.text
+			
 			forward(5, steps)
+		cam.release()
 	return 'done'
 
 cont = 'y'
