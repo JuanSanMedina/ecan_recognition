@@ -104,7 +104,7 @@ while cont == 'y':
 	item_class = raw_input("What class? ")
 	get_data(int(samples), item_class)
 	cont = raw_input("Continue? [y/n] ")
-	if cont != 'y' or cont != 'n':
+	if cont != 'y' and cont != 'n':
 		cont = 'n'
 GPIO.cleanup()
 

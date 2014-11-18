@@ -9,3 +9,5 @@ files = {'image_picam': open('pi.jpg', 'rb')}
 
 r = requests.post(url, data = data, files=files)
 print r.text
+
+
