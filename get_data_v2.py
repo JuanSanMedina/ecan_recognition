@@ -77,9 +77,9 @@ def outputs(samples, steps, weight, item_class):
 	yield stream
 	stream.seek(0)
 	my_file = stream
-	data = {'ecan':'1'}
-	files = {'back_ground': my_file}
-	r = requests.post(url_bg, data = data, files=files)
+	data_bg = {'ecan':'1'}
+	files_bg = {'back_ground': my_file}
+	r = requests.post(url_bg, data = data_bg, files=files_bg)
 	stream.seek(0)
 	stream.truncate()
 	if r.json()['result'] == 'valid': bg_pk =r.json()['id']; print r.json()['result'], 'back_ground id: ', r.json()['id']
@@ -96,10 +96,12 @@ def outputs(samples, steps, weight, item_class):
 		stream.seek(0)
 		if i>0:
 			my_file = stream
-			data = {'ecan':'1','bg': bg_pk, 'weight':weight, 'item_class':item_class}
-			files = {'image_picam': my_file}
-			r = requests.post(url_item, data = data, files=files)
+			data_item = {'ecan':'1','bg': bg_pk, 'weight':weight, 'item_class':item_class}
+			files_item = {'image_picam': my_file}
+			r = requests.post(url_item, data = data_item, files=files_item)
 			print r.text
+			data_item = 0
+			files_item = 0
 			forward(5, steps)
 		stream.seek(0)
 		stream.truncate()
