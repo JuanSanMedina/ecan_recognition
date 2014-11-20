@@ -90,6 +90,7 @@ def outputs(samples, steps, weight, item_class):
 		cont = raw_input("ready? [y] ")
 		if cont != 'y':
 			cont = 'n'
+
 	for i in range(samples):
 		yield stream
 		stream.seek(0)
