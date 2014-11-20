@@ -64,7 +64,7 @@ def setStep(w1, w2, w3, w4):
 	GPIO.output(coil_B_2_pin, w4)
 
 
-def outputs(samples, steps, weight, bg_pk, item_class):
+def outputs(samples, steps, weight, item_class):
 	stream = io.BytesIO()
 	for i in range(samples):
 		yield stream
@@ -73,23 +73,35 @@ def outputs(samples, steps, weight, bg_pk, item_class):
 		my_file = StringIO.StringIO()
 		img.save(my_file, "JPEG")
 		my_file.seek(0)
-		data = {'ecan':'1','bg': bg_pk, 'weight':weight, 'item_class':item_class}
-		files = {'image_picam': my_file}
-		url = 'http://128.122.72.105:8000/ecan/upload/'
-		r = requests.post(url, data = data, files=files)
-		print r.text
+		if i == 0:
+			cont = 'n'
+			print 'Prepare for back ground capture'
+			while cont != 'y':
+				cont = raw_input("ready? [y] ")
+			if cont != 'y':
+				cont = 'n'
+			data = {'ecan':'1'}
+			files = {'back_ground': my_file}
+			url = 'http://128.122.72.105:8000/ecan/upload-back_ground/'
+			r = requests.post(url, data = data, files=files)
+			if r.json()['result'] == 'valid':
+				bg_pk =r.json()['id']
+				print r.json()['result'], 'Back ground id: ', r.json()['id']
+			else: 
+				print 'Operation not completed'
+				break
+		else:
+			data = {'ecan':'1','bg': bg_pk, 'weight':weight, 'item_class':item_class}
+			files = {'image_picam': my_file}
+			url = 'http://128.122.72.105:8000/ecan/upload/'
+			# r = requests.post(url, data = data, files=files)
+			print r.text
 		stream.seek(0)
 		stream.truncate()
 		my_file.close()
 		forward(5, steps)
 
 def get_data(samples, item_class):
-	cont = 'n'
-	print 'Prepare for back ground capture'
-	while cont != 'y':
-		cont = raw_input("ready? [y] ")
-		if cont != 'y':
-			cont = 'n'
 
 	with picamera.PiCamera() as camera:
 		camera.resolution = (1024, 768)
@@ -120,7 +132,7 @@ def get_data(samples, item_class):
 				cont = 'n'
 		weight = get_weight.get()
 		steps = int(512 /samples)
-		camera.capture_sequence(outputs(samples, steps, weight, bg_pk, item_class), 'jpeg', use_video_port=True)
+		camera.capture_sequence(outputs(samples, steps, weight, item_class), 'jpeg', use_video_port=True)
 	return 'done'
 
 cont = 'y'
