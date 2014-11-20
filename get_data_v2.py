@@ -74,32 +74,30 @@ def outputs(samples, steps, weight, item_class):
 		cont = raw_input("ready? [y] ")
 		if cont != 'y':
 			cont = 'n'
+	yield stream
+	stream.seek(0)
+	my_file = stream
+	data = {'ecan':'1'}
+	files = {'back_ground': my_file}
+	r = requests.post(url_bg, data = data, files=files)
+	stream.seek(0)
+	stream.truncate()
+	if r.json()['result'] == 'valid': bg_pk =r.json()['id']; print r.json()['result'], 'back_ground id: ', r.json()['id']
+	else: print 'Operation not completed'; break
+	print 'Place item'
+	cont = 'n'
+	while cont != 'y':
+		cont = raw_input("ready? [y] ")
+		if cont != 'y':
+			cont = 'n'
 	for i in range(samples):
 		yield stream
 		stream.seek(0)
 		my_file = stream
-		if i == 0:
-			data = {'ecan':'1'}
-			files = {'back_ground': my_file}
-			r = requests.post(url_bg, data = data, files=files)
-			myfile = 0
-			if r.json()['result'] == 'valid':
-				bg_pk =r.json()['id']
-				print r.json()['result'], 'back_ground id: ', r.json()['id']
-			else: 
-				print 'Operation not completed'
-				break
-			print 'Place item'
-			cont = 'n'
-			while cont != 'y':
-				cont = raw_input("ready? [y] ")
-				if cont != 'y':
-					cont = 'n'
-		elif i>0:
-			data = {'ecan':'1','bg': bg_pk, 'weight':weight, 'item_class':item_class}
-			files = {'image_picam': my_file}
-			r = requests.post(url_item, data = data, files=files)
-			print r.text
+		data = {'ecan':'1','bg': bg_pk, 'weight':weight, 'item_class':item_class}
+		files = {'image_picam': my_file}
+		r = requests.post(url_item, data = data, files=files)
+		print r.text
 		stream.seek(0)
 		stream.truncate()
 		forward(5, steps)
