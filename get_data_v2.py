@@ -69,7 +69,7 @@ def outputs(samples, steps, weight, item_class):
 	url_item = 'http://128.122.72.105:8000/ecan/upload/'
 	url_bg = 'http://128.122.72.105:8000/ecan/upload-back_ground/'
 	cont = 'n'
-	print 'Prepare for back ground capture'
+	print 'Prepare for back_ground capture'
 	while cont != 'y':
 		cont = raw_input("ready? [y] ")
 		if cont != 'y':
@@ -84,7 +84,7 @@ def outputs(samples, steps, weight, item_class):
 			r = requests.post(url_bg, data = data, files=files)
 			if r.json()['result'] == 'valid':
 				bg_pk =r.json()['id']
-				print r.json()['result'], 'Back ground id: ', r.json()['id']
+				print r.json()['result'], 'back_ground id: ', r.json()['id']
 			else: 
 				print 'Operation not completed'
 				break
