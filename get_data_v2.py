@@ -71,38 +71,39 @@ def outputs(samples, steps, weight, item_class):
 	for i in range(samples):
 		yield stream
 		stream.seek(0)
-		img = Image.open(stream)
-		my_file = StringIO.StringIO()
-		img.save(my_file, "JPEG")
+		my_file = stream
+		# img = Image.open(stream)
+		# my_file = StringIO.StringIO()
+		# img.save(my_file, "JPEG")
 		# my_file.seek(0)
 		# if i == 0:
-		# 	cont = 'n'
-		# 	print 'Prepare for back ground capture'
-		# 	while cont != 'y':
-		# 		cont = raw_input("ready? [y] ")
-		# 		if cont != 'y':
-		# 			cont = 'n'
-		# 	data = {'ecan':'1'}
-		# 	files = {'back_ground': my_file}
-		# 	r = requests.post(url_bg, data = data, files=files)
-		# 	if r.json()['result'] == 'valid':
-		# 		bg_pk =r.json()['id']
-		# 		print r.json()['result'], 'Back ground id: ', r.json()['id']
-		# 	else: 
-		# 		print 'Operation not completed'
-		# 		break
-		# 	print 'Place item'
-		# 	cont = 'n'
-		# 	while cont != 'y':
-		# 		cont = raw_input("ready? [y] ")
-		# 		if cont != 'y':
-		# 			cont = 'n'
-		# else:
-		# 	data = {'ecan':'1','bg': bg_pk, 'weight':weight, 'item_class':item_class}
-		# 	files = {'image_picam': my_file}
-		# 	# r = requests.post(url_item, data = data, files=files)
-		# 	print r.text
-		# stream.seek(0)
+			cont = 'n'
+			print 'Prepare for back ground capture'
+			while cont != 'y':
+				cont = raw_input("ready? [y] ")
+				if cont != 'y':
+					cont = 'n'
+			data = {'ecan':'1'}
+			files = {'back_ground': my_file}
+			r = requests.post(url_bg, data = data, files=files)
+			if r.json()['result'] == 'valid':
+				bg_pk =r.json()['id']
+				print r.json()['result'], 'Back ground id: ', r.json()['id']
+			else: 
+				print 'Operation not completed'
+				break
+			print 'Place item'
+			cont = 'n'
+			while cont != 'y':
+				cont = raw_input("ready? [y] ")
+				if cont != 'y':
+					cont = 'n'
+		else:
+			data = {'ecan':'1','bg': bg_pk, 'weight':weight, 'item_class':item_class}
+			files = {'image_picam': my_file}
+			# r = requests.post(url_item, data = data, files=files)
+			print r.text
+		stream.seek(0)
 		stream.truncate()
 		# my_file.close()
 		forward(5, steps)
