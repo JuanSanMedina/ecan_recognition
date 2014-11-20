@@ -89,15 +89,16 @@ def outputs(samples, steps, weight, item_class):
 			else: print 'Operation not completed';
 			print 'Place item'
 			cont = 'n'
+			time.sleep(2)
 			while cont != 'y':
 				cont = raw_input("ready? [y] ")
 				if cont != 'y':
 					cont = 'n'
+			forward(5, steps)
 
-			yield stream
-			stream.seek(0)
-			stream.truncate(0)
 		else: 
+			yield stream
+			stream.truncate()
 			yield stream
 			stream.seek(0)
 			my_file = stream
