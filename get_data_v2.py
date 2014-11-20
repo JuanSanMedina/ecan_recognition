@@ -68,21 +68,17 @@ def outputs(samples, steps, weight, item_class):
 	stream = io.BytesIO()
 	url_item = 'http://128.122.72.105:8000/ecan/upload/'
 	url_bg = 'http://128.122.72.105:8000/ecan/upload-back_ground/'
+	cont = 'n'
+	print 'Prepare for back ground capture'
+	while cont != 'y':
+		cont = raw_input("ready? [y] ")
+		if cont != 'y':
+			cont = 'n'
 	for i in range(samples):
 		yield stream
 		stream.seek(0)
 		my_file = stream
-		# img = Image.open(stream)
-		# my_file = StringIO.StringIO()
-		# img.save(my_file, "JPEG")
-		# my_file.seek(0)
 		if i == 0:
-			cont = 'n'
-			print 'Prepare for back ground capture'
-			while cont != 'y':
-				cont = raw_input("ready? [y] ")
-				if cont != 'y':
-					cont = 'n'
 			data = {'ecan':'1'}
 			files = {'back_ground': my_file}
 			r = requests.post(url_bg, data = data, files=files)
@@ -105,7 +101,6 @@ def outputs(samples, steps, weight, item_class):
 			print r.text
 		stream.seek(0)
 		stream.truncate()
-		# my_file.close()
 		forward(5, steps)
 
 def get_data(samples, item_class):
