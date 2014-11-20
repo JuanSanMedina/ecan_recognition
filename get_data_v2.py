@@ -81,7 +81,7 @@ def outputs(samples, steps, weight, item_class):
 	files_bg = {'back_ground': my_file}
 	r = requests.post(url_bg, data = data_bg, files=files_bg)
 	stream.seek(0)
-	stream.truncate()
+	stream.truncate(0)
 	if r.json()['result'] == 'valid': bg_pk =r.json()['id']; print r.json()['result'], 'back_ground id: ', r.json()['id']
 	else: print 'Operation not completed';
 	print 'Place item'
@@ -103,7 +103,7 @@ def outputs(samples, steps, weight, item_class):
 		files_item = 0
 		forward(5, steps)
 		stream.seek(0)
-		stream.truncate(size = 0)
+		stream.truncate(0)
 
 def get_data(samples, item_class):
 
