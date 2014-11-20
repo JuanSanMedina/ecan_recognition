@@ -91,6 +91,7 @@ def outputs(samples, steps, weight, item_class):
 				cont = raw_input("ready? [y] ")
 				if cont != 'y':
 					cont = 'n'
+			time.sleep(2)
 		else: 
 			yield stream
 			stream.seek(0)
