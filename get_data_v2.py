@@ -82,6 +82,7 @@ def outputs(samples, steps, weight, item_class):
 			data = {'ecan':'1'}
 			files = {'back_ground': my_file}
 			r = requests.post(url_bg, data = data, files=files)
+			myfile = 0
 			if r.json()['result'] == 'valid':
 				bg_pk =r.json()['id']
 				print r.json()['result'], 'back_ground id: ', r.json()['id']
@@ -94,7 +95,7 @@ def outputs(samples, steps, weight, item_class):
 				cont = raw_input("ready? [y] ")
 				if cont != 'y':
 					cont = 'n'
-		else:
+		elif i>0:
 			data = {'ecan':'1','bg': bg_pk, 'weight':weight, 'item_class':item_class}
 			files = {'image_picam': my_file}
 			r = requests.post(url_item, data = data, files=files)
