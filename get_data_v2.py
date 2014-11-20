@@ -80,6 +80,8 @@ def outputs(samples, steps, weight, item_class):
 			yield different
 			different.seek(0)
 			my_file_bg = different
+			different.seek(0)
+			different.truncate(0)
 			data_bg = {'ecan':'1'}
 			files_bg = {'back_ground': my_file_bg}
 			r = requests.post(url_bg, data = data_bg, files=files_bg)
@@ -91,7 +93,10 @@ def outputs(samples, steps, weight, item_class):
 				cont = raw_input("ready? [y] ")
 				if cont != 'y':
 					cont = 'n'
-			time.sleep(2)
+
+			yield stream
+			stream.seek(0)
+			stream.truncate(0)
 		else: 
 			yield stream
 			stream.seek(0)
@@ -102,7 +107,7 @@ def outputs(samples, steps, weight, item_class):
 			print r.text
 			forward(5, steps)
 			stream.seek(0)
-			stream.truncate()
+			stream.truncate(0)
 
 def get_data(samples, item_class):
 
