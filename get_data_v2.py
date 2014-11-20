@@ -74,6 +74,7 @@ def outputs(samples, steps, weight, item_class):
 		if cont != 'y':
 			cont = 'n'
 	stream = io.BytesIO()
+	different = io.BytesIO()
 	for i in range(samples +1):
 		if i ==0:
 			yield different
