@@ -64,25 +64,45 @@ def setStep(w1, w2, w3, w4):
 	GPIO.output(coil_B_2_pin, w4)
 
 
-def outputs(samples, steps, weight, item_class, bg_pk):
+def outputs(samples, steps, weight, item_class):
 	stream = io.BytesIO()
 	url_item = 'http://128.122.72.105:8000/ecan/upload/'
+	url_bg = 'http://128.122.72.105:8000/ecan/upload-back_ground/'
+	cont = 'n'
+	print 'Prepare for back_ground capture'
+	while cont != 'y':
+		cont = raw_input("ready? [y] ")
+		if cont != 'y':
+			cont = 'n'
 
-	for i in range(samples ):
+	for i in range(samples +1):
 		yield stream
 		stream.seek(0)
-		my_file = stream
-		data_item = {'ecan':'1','bg': bg_pk, 'weight':weight, 'item_class':item_class}
-		files_item = {'image_picam': my_file}
-		r = requests.post(url_item, data = data_item, files=files_item)
-		print r.text
-		data_item = 0
-		files_item = 0
-		forward(5, steps)
+		if i ==0:
+			my_file_bg = stream
+			data_bg = {'ecan':'1'}
+			files_bg = {'back_ground': my_file_bg}
+			r = requests.post(url_bg, data = data_bg, files=files_bg)
+			if r.json()['result'] == 'valid': bg_pk =r.json()['id']; print r.json()['result'], 'back_ground id: ', r.json()['id']
+			else: print 'Operation not completed';
+			print 'Place item'
+			cont = 'n'
+			while cont != 'y':
+				cont = raw_input("ready? [y] ")
+				if cont != 'y':
+					cont = 'n'
+		else: 
+			my_file = stream
+			data_item = {'ecan':'1','bg': bg_pk, 'weight':weight, 'item_class':item_class}
+			files_item = {'image_picam': my_file}
+			r = requests.post(url_item, data = data_item, files=files_item)
+			print r.text
+			forward(5, steps)
 		stream.seek(0)
-		stream.truncate(0)
+		stream.truncate()
 
 def get_data(samples, item_class):
+
 	with picamera.PiCamera() as camera:
 		camera.resolution = (1024, 768)
 		camera.iso = 200
@@ -93,28 +113,9 @@ def get_data(samples, item_class):
 		g = camera.awb_gains
 		camera.awb_mode = 'off'
 		camera.awb_gains = g
-		url_bg = 'http://128.122.72.105:8000/ecan/upload-back_ground/'
-		cont = 'n'
-		print 'Prepare for back_ground capture'
-		while cont != 'y':
-			cont = raw_input("ready? [y] ")
-			if cont != 'y':
-				cont = 'n'
-		camera.capture('pi_cam/bg_im.jpg')
-		data = {'ecan':'1'}
-		files = {'back_ground': open('pi_cam/bg_im.jpg', 'rb')}
-		r = requests.post(url_bg, data = data, files=files)
-		if r.json()['result'] == 'valid': bg_pk =r.json()['id']; print r.json()['result'], 'back_ground id: ', r.json()['id']
-		else: return 'Operation not completed'
-		print 'Place item'
-		cont = 'n'
-		while cont != 'y':
-			cont = raw_input("ready? [y] ")
-			if cont != 'y':
-				cont = 'n'
 		weight = get_weight.get()
 		steps = int(512 /samples)
-		camera.capture_sequence(outputs(samples, steps, weight, item_class, bg_pk), 'jpeg', use_video_port=True)
+		camera.capture_sequence(outputs(samples, steps, weight, item_class), 'jpeg', use_video_port=True)
 	return 'done'
 
 cont = 'y'
