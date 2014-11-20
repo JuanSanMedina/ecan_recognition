@@ -95,7 +95,6 @@ def outputs(samples, steps, weight, item_class):
 				if cont != 'y':
 					cont = 'n'
 		else:
-			if i == 0: print 'i equal zero'
 			data = {'ecan':'1','bg': bg_pk, 'weight':weight, 'item_class':item_class}
 			files = {'image_picam': my_file}
 			r = requests.post(url_item, data = data, files=files)
