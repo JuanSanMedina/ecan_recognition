@@ -71,9 +71,9 @@ def outputs(samples, steps, weight, item_class):
 	for i in range(samples):
 		yield stream
 		stream.seek(0)
-		# img = Image.open(stream)
-		# my_file = StringIO.StringIO()
-		# img.save(my_file, "JPEG")
+		img = Image.open(stream)
+		my_file = StringIO.StringIO()
+		img.save(my_file, "JPEG")
 		# my_file.seek(0)
 		# if i == 0:
 		# 	cont = 'n'
