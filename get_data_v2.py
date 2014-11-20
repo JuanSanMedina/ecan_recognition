@@ -65,7 +65,6 @@ def setStep(w1, w2, w3, w4):
 
 
 def outputs(samples, steps, weight, item_class):
-	stream = io.BytesIO()
 	url_item = 'http://128.122.72.105:8000/ecan/upload/'
 	url_bg = 'http://128.122.72.105:8000/ecan/upload-back_ground/'
 	cont = 'n'
@@ -74,7 +73,7 @@ def outputs(samples, steps, weight, item_class):
 		cont = raw_input("ready? [y] ")
 		if cont != 'y':
 			cont = 'n'
-
+	stream = io.BytesIO()
 	for i in range(samples +1):
 		yield stream
 		stream.seek(0)
@@ -106,7 +105,7 @@ def get_data(samples, item_class):
 	with picamera.PiCamera() as camera:
 		camera.resolution = (1024, 768)
 		camera.iso = 200
-		camera.framerate = 40
+		camera.framerate = 20
 		time.sleep(2)
 		camera.shutter_speed = camera.exposure_speed
 		camera.exposure_mode = 'off'
