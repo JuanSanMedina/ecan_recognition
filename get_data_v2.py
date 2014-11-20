@@ -109,8 +109,8 @@ def get_data(samples, item_class):
 		camera.iso = 200
 		camera.framerate = 40
 		time.sleep(2)
-		# camera.shutter_speed = camera.exposure_speed
-		# camera.exposure_mode = 'off'
+		camera.shutter_speed = camera.exposure_speed
+		camera.exposure_mode = 'off'
 		g = camera.awb_gains
 		camera.awb_mode = 'off'
 		camera.awb_gains = g
