@@ -78,7 +78,7 @@ def outputs(samples, steps, weight, item_class):
 	for i in range(samples +1):
 		if i ==0:
 			yield different
-			stream.seek(0)
+			different.seek(0)
 			my_file_bg = different
 			data_bg = {'ecan':'1'}
 			files_bg = {'back_ground': my_file_bg}
