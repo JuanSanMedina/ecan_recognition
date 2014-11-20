@@ -76,7 +76,7 @@ def outputs(samples, steps, weight, item_class):
 		# my_file = StringIO.StringIO()
 		# img.save(my_file, "JPEG")
 		# my_file.seek(0)
-		# if i == 0:
+		if i == 0:
 			cont = 'n'
 			print 'Prepare for back ground capture'
 			while cont != 'y':
@@ -101,7 +101,7 @@ def outputs(samples, steps, weight, item_class):
 		else:
 			data = {'ecan':'1','bg': bg_pk, 'weight':weight, 'item_class':item_class}
 			files = {'image_picam': my_file}
-			# r = requests.post(url_item, data = data, files=files)
+			r = requests.post(url_item, data = data, files=files)
 			print r.text
 		stream.seek(0)
 		stream.truncate()
