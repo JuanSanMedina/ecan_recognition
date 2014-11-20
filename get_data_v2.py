@@ -64,7 +64,7 @@ def setStep(w1, w2, w3, w4):
 	GPIO.output(coil_B_2_pin, w4)
 
 
-def outputs(samples, steps, weight, bg_pk):
+def outputs(samples, steps, weight, bg_pk, item_class):
 	stream = io.BytesIO()
 	for i in range(samples):
 		yield stream
@@ -119,7 +119,6 @@ def get_data(samples, item_class):
 			if cont != 'y':
 				cont = 'n'
 		weight = get_weight.get()
-
 		steps = int(512 /samples)
 		camera.capture_sequence(outputs(samples, steps, weight, bg_pk, item_class), 'jpeg', use_video_port=True)
 	return 'done'
