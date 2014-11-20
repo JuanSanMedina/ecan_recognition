@@ -83,7 +83,7 @@ def outputs(samples, steps, weight, item_class):
 	stream.seek(0)
 	stream.truncate()
 	if r.json()['result'] == 'valid': bg_pk =r.json()['id']; print r.json()['result'], 'back_ground id: ', r.json()['id']
-	else: print 'Operation not completed'; break
+	else: print 'Operation not completed';
 	print 'Place item'
 	cont = 'n'
 	while cont != 'y':
