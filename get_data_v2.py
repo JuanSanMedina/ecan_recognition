@@ -91,20 +91,19 @@ def outputs(samples, steps, weight, item_class):
 		if cont != 'y':
 			cont = 'n'
 
-	for i in range(samples  + 1):
+	for i in range(samples ):
 		yield stream
 		stream.seek(0)
-		if i>0:
-			my_file = stream
-			data_item = {'ecan':'1','bg': bg_pk, 'weight':weight, 'item_class':item_class}
-			files_item = {'image_picam': my_file}
-			r = requests.post(url_item, data = data_item, files=files_item)
-			print r.text
-			data_item = 0
-			files_item = 0
-			forward(5, steps)
+		my_file = stream
+		data_item = {'ecan':'1','bg': bg_pk, 'weight':weight, 'item_class':item_class}
+		files_item = {'image_picam': my_file}
+		r = requests.post(url_item, data = data_item, files=files_item)
+		print r.text
+		data_item = 0
+		files_item = 0
+		forward(5, steps)
 		stream.seek(0)
-		stream.truncate()
+		stream.truncate(size = 0)
 
 def get_data(samples, item_class):
 
