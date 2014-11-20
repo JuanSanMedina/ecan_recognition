@@ -80,8 +80,8 @@ def outputs(samples, steps, weight, item_class):
 			yield different
 			different.seek(0)
 			my_file_bg = different
-			different.seek(0)
-			different.truncate(0)
+			# different.seek(0)
+			# different.truncate(0)
 			data_bg = {'ecan':'1'}
 			files_bg = {'back_ground': my_file_bg}
 			r = requests.post(url_bg, data = data_bg, files=files_bg)
