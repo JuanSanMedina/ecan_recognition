@@ -98,7 +98,7 @@ def outputs(samples, steps, weight, item_class):
 			files_item = {'image_picam': my_file}
 			r = requests.post(url_item, data = data_item, files=files_item)
 			print r.text
-			forward(10, steps)
+		forward(5, steps)
 		stream.truncate(0)
 		stream.seek(0)
 
@@ -109,7 +109,7 @@ def get_data(samples, item_class):
 		start = 0
 		camera.resolution = (1024, 768)
 		camera.iso = 200
-		camera.framerate = 30
+		camera.framerate = 20
 		time.sleep(2)
 		camera.shutter_speed = camera.exposure_speed
 		camera.exposure_mode = 'off'
