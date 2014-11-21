@@ -86,8 +86,8 @@ def get_data(samples, item_class):
 				cont = 'n'
 		stream = io.BytesIO()
 		count = 0
-		# for foo in camera.capture_continuous(stream, format='jpeg', use_video_port=False, burst = True):
-		for foo in camera.capture_continuous(stream, format='jpeg', use_video_port=True):
+		for foo in camera.capture_continuous(stream, format='jpeg', use_video_port=False, burst = True):
+		# for foo in camera.capture_continuous(stream, format='jpeg', use_video_port=True):
 			# Truncate the stream to the current position (in case
 			# prior iterations output a longer image)
 			stream.truncate()
@@ -111,9 +111,9 @@ def get_data(samples, item_class):
 				files_item = {'image_picam': my_file}
 				r = requests.post(url_item, data = data_item, files=files_item)
 				print r.text
-			if count == samples+4:
+				forward(15, steps)
+			if count == samples:
 				break
-			forward(15, steps)
 			stream.truncate(0)
 			stream.seek(0)
 			count+=1

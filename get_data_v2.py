@@ -75,7 +75,7 @@ def outputs(samples, steps, weight, item_class):
 		if cont != 'y':
 			cont = 'n'
 	stream = io.BytesIO()
-	for i in range(samples +1):
+	for i in range(samples +2):
 		yield stream
 		stream.seek(0)
 		if i ==0:
@@ -92,7 +92,7 @@ def outputs(samples, steps, weight, item_class):
 				if cont != 'y':
 					cont = 'n'
 			start = time.time()
-		else: 
+		elif i>3: 
 			my_file = stream
 			data_item = {'ecan':'1','bg': bg_pk, 'weight':weight, 'item_class':item_class}
 			files_item = {'image_picam': my_file}
