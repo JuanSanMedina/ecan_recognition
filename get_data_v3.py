@@ -105,14 +105,14 @@ def get_data(samples, item_class):
 					if cont != 'y':
 						cont = 'n'
 				start = time.time()
-			else: 
+			elif count >=3: 
 				data_item = {'ecan':'1','bg': bg_pk, 'weight':weight, 'item_class':item_class}
 				files_item = {'image_picam': my_file}
 				r = requests.post(url_item, data = data_item, files=files_item)
 				print r.text
-				forward(15, steps)
-			if count == samples:
+			if count == samples+4:
 				break
+			forward(15, steps)
 			stream.truncate(0)
 			stream.seek(0)
 			count+=1
