@@ -76,7 +76,6 @@ def outputs(samples, steps, weight, item_class):
 	stream = io.BytesIO()
 	for i in range(samples +1):
 		yield stream
-		stream.truncate(0)
 		stream.seek(0)
 		if i ==0:
 			my_file_bg = stream
