@@ -74,14 +74,12 @@ def outputs(samples, steps, weight, item_class):
 		if cont != 'y':
 			cont = 'n'
 	stream = io.BytesIO()
-	different = io.BytesIO()
 	for i in range(samples +1):
+		yield stream
+		stream.truncate()
+		stream.seek(0)
 		if i ==0:
-			yield different
-			different.seek(0)
-			my_file_bg = different
-			# different.seek(0)
-			# different.truncate(0)
+			my_file_bg = stream
 			data_bg = {'ecan':'1'}
 			files_bg = {'back_ground': my_file_bg}
 			r = requests.post(url_bg, data = data_bg, files=files_bg)
@@ -95,20 +93,15 @@ def outputs(samples, steps, weight, item_class):
 				if cont != 'y':
 					cont = 'n'
 			forward(5, steps)
-
 		else: 
-			yield stream
-			stream.truncate()
-			yield stream
-			stream.seek(0)
 			my_file = stream
 			data_item = {'ecan':'1','bg': bg_pk, 'weight':weight, 'item_class':item_class}
 			files_item = {'image_picam': my_file}
 			r = requests.post(url_item, data = data_item, files=files_item)
 			print r.text
 			forward(5, steps)
-			stream.seek(0)
 			stream.truncate(0)
+			stream.seek(0)
 
 def get_data(samples, item_class):
 

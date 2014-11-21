@@ -110,7 +110,7 @@ def get_data(samples, item_class):
 				r = requests.post(url_item, data = data_item, files=files_item)
 				print r.text
 				forward(5, steps)
-			if count == samples+1:
+			if count == samples:
 				break
 			stream.truncate(0)
 			stream.seek(0)
