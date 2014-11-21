@@ -86,7 +86,8 @@ def get_data(samples, item_class):
 				cont = 'n'
 		stream = io.BytesIO()
 		count = 0
-		for foo in camera.capture_continuous(stream, format='jpeg', use_video_port=False, burst = True):
+		# for foo in camera.capture_continuous(stream, format='jpeg', use_video_port=False, burst = True):
+		for foo in camera.capture_continuous(stream, format='jpeg', use_video_port=True):
 			# Truncate the stream to the current position (in case
 			# prior iterations output a longer image)
 			stream.truncate()
