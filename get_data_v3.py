@@ -77,6 +77,14 @@ def get_data(samples, item_class):
 		weight = get_weight.get()
 		steps = int(512 /samples)
 		stream = io.BytesIO()
+		url_item = 'http://128.122.72.105:8000/ecan/upload/'
+		url_bg = 'http://128.122.72.105:8000/ecan/upload-back_ground/'
+		cont = 'n'
+		print 'Prepare for back_ground capture'
+		while cont != 'y':
+			cont = raw_input("ready? [y] ")
+			if cont != 'y':
+				cont = 'n'
 		for i, foo in enumerate(camera.capture_continuous(stream, format='jpeg')):
 			# Truncate the stream to the current position (in case
 			# prior iterations output a longer image)
