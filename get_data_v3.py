@@ -82,7 +82,7 @@ def get_data(samples, item_class):
 			# prior iterations output a longer image)
 			stream.truncate()
 			stream.seek(0)
-			myfile = stream
+			my_file = stream
 			if i ==0:
 				data_bg = {'ecan':'1'}
 				files_bg = {'back_ground': my_file}
