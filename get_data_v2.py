@@ -109,7 +109,7 @@ def get_data(samples, item_class):
 		start = 0
 		camera.resolution = (1024, 768)
 		camera.iso = 200
-		camera.framerate = 20
+		camera.framerate = 10
 		time.sleep(2)
 		camera.shutter_speed = camera.exposure_speed
 		camera.exposure_mode = 'off'
