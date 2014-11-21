@@ -65,6 +65,7 @@ def setStep(w1, w2, w3, w4):
 
 
 def outputs(samples, steps, weight, item_class):
+	global start
 	url_item = 'http://128.122.72.105:8000/ecan/upload/'
 	url_bg = 'http://128.122.72.105:8000/ecan/upload-back_ground/'
 	cont = 'n'
@@ -104,6 +105,7 @@ def outputs(samples, steps, weight, item_class):
 def get_data(samples, item_class):
 
 	with picamera.PiCamera() as camera:
+		global start
 		camera.resolution = (1024, 768)
 		camera.iso = 200
 		camera.framerate = 20
