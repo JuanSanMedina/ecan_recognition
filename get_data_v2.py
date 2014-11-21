@@ -86,11 +86,11 @@ def outputs(samples, steps, weight, item_class):
 			else: print 'Operation not completed';
 			print 'Place item'
 			cont = 'n'
-			# time.sleep(2)
 			while cont != 'y':
 				cont = raw_input("ready? [y] ")
 				if cont != 'y':
 					cont = 'n'
+			start = time.time()
 		else: 
 			my_file = stream
 			data_item = {'ecan':'1','bg': bg_pk, 'weight':weight, 'item_class':item_class}
@@ -115,10 +115,9 @@ def get_data(samples, item_class):
 		camera.awb_gains = g
 		weight = get_weight.get()
 		steps = int(512 /samples)
-		start = time.time()
-		camera.capture_sequence(outputs(samples, steps, weight, item_class), 'jpeg', use_video_port=False)
+		camera.capture_sequence(outputs(samples, steps, weight, item_class), 'jpeg', use_video_port=True)
 		finish = time.time()
-		print('Captured %s' %samples + ' images at %.2ffps' % (samples/ (finish - start)))
+		print('Captured %s' %samples + ' images in %.2fs' % (finish - start)
 	return 'done'
 
 cont = 'y'
