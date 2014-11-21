@@ -92,7 +92,7 @@ def get_data(samples, item_class):
 			stream.truncate()
 			stream.seek(0)
 			my_file = stream
-			if i ==0:
+			if count ==0:
 				data_bg = {'ecan':'1'}
 				files_bg = {'back_ground': my_file}
 				r = requests.post(url_bg, data = data_bg, files=files_bg)
