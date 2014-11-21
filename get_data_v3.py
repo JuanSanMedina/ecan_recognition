@@ -117,7 +117,7 @@ def get_data(samples, item_class):
 			stream.seek(0)
 			count+=1
 		finish = time.time()
-		print('Captured %s' %samples + ' images in %.2fs' % (finish - start)
+		print'Captured %s' %samples + ' images in %.2fs' %(finish - start)
 	return 'done'
 
 cont = 'y'

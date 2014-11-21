@@ -117,7 +117,7 @@ def get_data(samples, item_class):
 		steps = int(512 /samples)
 		camera.capture_sequence(outputs(samples, steps, weight, item_class), 'jpeg', use_video_port=True)
 		finish = time.time()
-		print('Captured %s' %samples + ' images in %.2fs' % (finish - start)
+		print'Captured %s' %samples + ' images in %.2fs' % (finish - start)
 	return 'done'
 
 cont = 'y'
