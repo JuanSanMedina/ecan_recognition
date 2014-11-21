@@ -86,6 +86,7 @@ def get_data(samples, item_class):
 				cont = 'n'
 		stream = io.BytesIO()
 		count = 0
+		start = time.time()
 		for foo in camera.capture_continuous(stream, format='jpeg', use_video_port=True):
 			# Truncate the stream to the current position (in case
 			# prior iterations output a longer image)
@@ -115,6 +116,8 @@ def get_data(samples, item_class):
 			stream.truncate(0)
 			stream.seek(0)
 			count+=1
+		finish = time.time()
+		print('Captured %s' %samples + ' images at %.2ffps' % (samples/ (finish - start)))
 	return 'done'
 
 cont = 'y'
