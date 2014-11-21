@@ -67,7 +67,6 @@ def setStep(w1, w2, w3, w4):
 def outputs(samples, steps, weight, item_class):
 	url_item = 'http://128.122.72.105:8000/ecan/upload/'
 	url_bg = 'http://128.122.72.105:8000/ecan/upload-back_ground/'
-	bg_pk = 1
 	cont = 'n'
 	print 'Prepare for back_ground capture'
 	while cont != 'y':
@@ -76,27 +75,27 @@ def outputs(samples, steps, weight, item_class):
 			cont = 'n'
 	stream = io.BytesIO()
 	different = io.BytesIO()
-	for i in range(samples ):
-		if i =='':
-			print 'juan'
-			# yield different
+	for i in range(samples +1):
+		if i ==0:
+			yield different
+			different.seek(0)
+			my_file_bg = different
 			# different.seek(0)
-			# my_file_bg = different
-			# # different.seek(0)
-			# # different.truncate(0)
-			# data_bg = {'ecan':'1'}
-			# files_bg = {'back_ground': my_file_bg}
-			# r = requests.post(url_bg, data = data_bg, files=files_bg)
-			# if r.json()['result'] == 'valid': bg_pk =r.json()['id']; print r.json()['result'], 'back_ground id: ', r.json()['id']
-			# else: print 'Operation not completed';
-			# print 'Place item'
-			# cont = 'n'
-			# time.sleep(2)
-			# while cont != 'y':
-			# 	cont = raw_input("ready? [y] ")
-			# 	if cont != 'y':
-			# 		cont = 'n'
-			# forward(5, steps)
+			# different.truncate(0)
+			data_bg = {'ecan':'1'}
+			files_bg = {'back_ground': my_file_bg}
+			r = requests.post(url_bg, data = data_bg, files=files_bg)
+			if r.json()['result'] == 'valid': bg_pk =r.json()['id']; print r.json()['result'], 'back_ground id: ', r.json()['id']
+			else: print 'Operation not completed';
+			print 'Place item'
+			cont = 'n'
+			time.sleep(2)
+			while cont != 'y':
+				cont = raw_input("ready? [y] ")
+				if cont != 'y':
+					cont = 'n'
+			forward(5, steps)
+
 		else: 
 			yield stream
 			stream.truncate()

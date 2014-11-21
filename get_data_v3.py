@@ -76,7 +76,6 @@ def get_data(samples, item_class):
 		camera.awb_gains = g
 		weight = get_weight.get()
 		steps = int(512 /samples)
-		stream = io.BytesIO()
 		url_item = 'http://128.122.72.105:8000/ecan/upload/'
 		url_bg = 'http://128.122.72.105:8000/ecan/upload-back_ground/'
 		cont = 'n'
@@ -85,10 +84,11 @@ def get_data(samples, item_class):
 			cont = raw_input("ready? [y] ")
 			if cont != 'y':
 				cont = 'n'
+		stream = io.BytesIO()
 		for i, foo in enumerate(camera.capture_continuous(stream, format='jpeg')):
 			# Truncate the stream to the current position (in case
 			# prior iterations output a longer image)
-			stream.truncate()
+			stream.truncate([0])
 			stream.seek(0)
 			my_file = stream
 			if i ==0:
@@ -99,7 +99,6 @@ def get_data(samples, item_class):
 				else: print 'Operation not completed';
 				print 'Place item'
 				cont = 'n'
-				time.sleep(2)
 				while cont != 'y':
 					cont = raw_input("ready? [y] ")
 					if cont != 'y':
@@ -112,6 +111,8 @@ def get_data(samples, item_class):
 				forward(5, steps)
 			if i == samples+1:
 				break
+			stream.truncate([0])
+			stream.seek(0)
 	return 'done'
 
 cont = 'y'
