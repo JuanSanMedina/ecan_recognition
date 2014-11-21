@@ -106,6 +106,7 @@ def get_data(samples, item_class):
 
 	with picamera.PiCamera() as camera:
 		global start
+		start = 0
 		camera.resolution = (1024, 768)
 		camera.iso = 200
 		camera.framerate = 20
