@@ -86,12 +86,11 @@ def outputs(samples, steps, weight, item_class):
 			else: print 'Operation not completed';
 			print 'Place item'
 			cont = 'n'
-			time.sleep(2)
+			# time.sleep(2)
 			while cont != 'y':
 				cont = raw_input("ready? [y] ")
 				if cont != 'y':
 					cont = 'n'
-			forward(5, steps)
 		else: 
 			my_file = stream
 			data_item = {'ecan':'1','bg': bg_pk, 'weight':weight, 'item_class':item_class}
@@ -99,8 +98,8 @@ def outputs(samples, steps, weight, item_class):
 			r = requests.post(url_item, data = data_item, files=files_item)
 			print r.text
 			forward(5, steps)
-			stream.truncate(0)
-			stream.seek(0)
+		stream.truncate(0)
+		stream.seek(0)
 
 def get_data(samples, item_class):
 
