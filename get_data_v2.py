@@ -123,8 +123,33 @@ def get_data(samples, item_class):
 		print'Captured %s' %samples + ' images in %.2fs' % (finish - start)
 	return 'done'
 
+def get_preview():
+	with picamera.PiCamera() as camera:
+		camera.resolution = (640, 480)
+		camera.iso = 200
+		camera.framerate = 10
+		time.sleep(2)
+		camera.shutter_speed = camera.exposure_speed
+		camera.exposure_mode = 'off'
+		g = camera.awb_gains
+		camera.awb_mode = 'off'
+		camera.awb_gains = g
+		camera.capture('sample.jpg')
+		data = {'ecan':'1', 'bg': bg_pk, 'weight':weight, 'item_class':item_class}
+		files = {'image_picam': open('sample.jpg', 'rb')}
+		url = 'http://128.122.72.105:8000/ecan/upload-sample/'
+		r = requests.post(url, data = data, files=files)
+	return 'done'
+
+
 cont = 'y'
 while cont == 'y':
+	preview = raw_input("Preview? [y/n]")
+	if preview == 'y':
+		while preview == 'y':
+			take= raw_input("Take? [y/n]")
+			if take == 'y': get_preview()
+			preview = raw_input("Keep doing this? [y/n]")
 	samples = raw_input("Number of samples?")
 	item_class = raw_input("What class? ")
 	result = get_data(int(samples), item_class)
