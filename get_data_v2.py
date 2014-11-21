@@ -117,7 +117,7 @@ def get_data(samples, item_class):
 		weight = get_weight.get()
 		steps = int(512 /samples)
 		start = time.time()
-		camera.capture_sequence(outputs(samples, steps, weight, item_class), 'jpeg', use_video_port=True)
+		camera.capture_sequence(outputs(samples, steps, weight, item_class), 'jpeg', use_video_port=False)
 		finish = time.time()
 		print('Captured %s' %samples + ' images at %.2ffps' % (samples/ (finish - start)))
 	return 'done'
