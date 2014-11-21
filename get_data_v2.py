@@ -98,7 +98,7 @@ def outputs(samples, steps, weight, item_class):
 			files_item = {'image_picam': my_file}
 			r = requests.post(url_item, data = data_item, files=files_item)
 			print r.text
-		forward(5, steps)
+			forward(5, steps)
 		stream.truncate(0)
 		stream.seek(0)
 
