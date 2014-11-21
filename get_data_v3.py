@@ -88,7 +88,7 @@ def get_data(samples, item_class):
 		for i, foo in enumerate(camera.capture_continuous(stream, format='jpeg')):
 			# Truncate the stream to the current position (in case
 			# prior iterations output a longer image)
-			stream.truncate(0)
+			stream.truncate()
 			stream.seek(0)
 			my_file = stream
 			if i ==0:
