@@ -135,8 +135,8 @@ def get_preview():
 		camera.awb_mode = 'off'
 		camera.awb_gains = g
 		camera.capture('sample.jpg')
-		data = {'ecan':'1', 'bg': bg_pk, 'weight':weight, 'item_class':item_class}
-		files = {'image_picam': open('sample.jpg', 'rb')}
+		data = {'ecan':'1'}
+		files = {'im': open('sample.jpg', 'rb')}
 		url = 'http://128.122.72.105:8000/ecan/upload-sample/'
 		r = requests.post(url, data = data, files=files)
 	return 'done'
