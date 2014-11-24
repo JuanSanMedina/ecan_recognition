@@ -81,7 +81,7 @@ def outputs(samples, steps, weight, item_class):
 		if i ==0:
 			my_file_bg = stream
 			data_bg = {'ecan':'1'}
-			files_bg = {'back_ground': my_file_bg}
+			files_bg = {'im': my_file_bg}
 			r = requests.post(url_bg, data = data_bg, files=files_bg)
 			if r.json()['result'] == 'valid': bg_pk =r.json()['id']; print r.json()['result'], 'back_ground id: ', r.json()['id']
 			else: print 'Operation not completed';
@@ -95,7 +95,7 @@ def outputs(samples, steps, weight, item_class):
 		elif i>3: 
 			my_file = stream
 			data_item = {'ecan':'1','bg': bg_pk, 'weight':weight, 'item_class':item_class}
-			files_item = {'image_picam': my_file}
+			files_item = {'im': my_file}
 			r = requests.post(url_item, data = data_item, files=files_item)
 			print r.text
 			forward(5, steps)
