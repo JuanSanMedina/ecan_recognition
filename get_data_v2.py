@@ -105,6 +105,7 @@ def outputs(samples, steps, weight, item_class):
 def get_data(samples, item_class):
 
 	with picamera.PiCamera() as camera:
+		camera.led = False
 		global start
 		start = 0
 		camera.resolution = (1024, 768)
