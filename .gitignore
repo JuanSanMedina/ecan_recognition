@@ -1,0 +1,6 @@
+venv
+*.pyc
+staticfiles
+/*.sqlite3
+Icon*
+*Icon
