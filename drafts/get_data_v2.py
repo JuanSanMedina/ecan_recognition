@@ -1,12 +1,9 @@
 import io
 import time
-import picamera
 import get_weight
 import requests
+import picamera
 import RPi.GPIO as GPIO
-# import StringIO
-# from PIL import Image
-# import time
 
 GPIO.setmode(GPIO.BCM)
 
@@ -24,8 +21,10 @@ GPIO.setup(coil_B_2_pin, GPIO.OUT)
 
 GPIO.output(enable_pin, 1)
 
-def forward(delay, steps):  
-    delay = int(delay)/1000.0
+
+# Functions #
+def forward(delay, steps):
+    delay = int(delay) / 1000.0
     steps = int(steps)
     for i in range(0, steps):
         setStep(1, 0, 1, 0)
@@ -37,8 +36,9 @@ def forward(delay, steps):
         setStep(1, 0, 0, 1)
         time.sleep(delay)
 
+
 def backwards(delay, steps):
-    delay = int(delay)/1000.0
+    delay = int(delay) / 1000.0
     steps = int(steps)
     for i in range(0, steps):
         setStep(1, 0, 0, 1)
@@ -49,6 +49,7 @@ def backwards(delay, steps):
         time.sleep(delay)
         setStep(1, 0, 1, 0)
         time.sleep(delay)
+
 
 def setStep(w1, w2, w3, w4):
     GPIO.output(coil_A_1_pin, w1)
@@ -68,16 +69,20 @@ def outputs(samples, steps, weight, item_class):
         if cont != 'y':
             cont = 'n'
     stream = io.BytesIO()
-    for i in range(samples +4):
+    for i in range(samples + 4):
         yield stream
         stream.seek(0)
-        if i ==0:
+
+        if i == 0:
             my_file_bg = stream
-            data_bg = {'ecan':'1'}
+            data_bg = {'ecan': '1'}
             files_bg = {'im': my_file_bg}
-            r = requests.post(url_bg, data = data_bg, files=files_bg)
-            if r.json()['result'] == 'valid': bg_pk =r.json()['id']; print r.json()['result'], 'back_ground id: ', r.json()['id']
-            else: print 'Operation not completed';
+            r = requests.post(url_bg, data=data_bg, files=files_bg)
+            if r.json()['result'] == 'valid':
+                bg_pk = r.json()['id']
+                print r.json()['result'], 'back_ground id: ', r.json()['id']
+            else:
+                print 'Operation not completed'
             print 'Place item'
             cont = 'n'
             while cont != 'y':
@@ -85,14 +90,18 @@ def outputs(samples, steps, weight, item_class):
                 if cont != 'y':
                     cont = 'n'
             start = time.time()
-        elif i>3: 
+        elif i > 3:
             my_file = stream
-            data_item = {'ecan':'1','bg': bg_pk, 'weight':weight, 'item_class':item_class}
+            data_item = {
+                'ecan': '1', 'bg': bg_pk,
+                'weight': weight,
+                'item_class': item_class}
+
             files_item = {'im': my_file}
             r = requests.post(
-                              url_item, data=data_item, files=files_item)
+                url_item, data=data_item, files=files_item)
             print r.text
-            forward(5, steps)
+            forward(10, steps)
         stream.truncate(0)
         stream.seek(0)
 
@@ -114,11 +123,12 @@ def get_data(samples, item_class):
         weight = get_weight.get()
         steps = int(512 / samples)
         camera.capture_sequence(
-                                outputs(samples, steps, weight, item_class),
-                                'jpeg', use_video_port=True)
+            outputs(samples, steps, weight, item_class),
+            'jpeg', use_video_port=True)
         finish = time.time()
         print'Captured %s' % samples + ' images in %.2fs' % (finish - start)
     return 'done'
+
 
 def get_preview():
     with picamera.PiCamera() as camera:
@@ -132,59 +142,49 @@ def get_preview():
         camera.awb_mode = 'off'
         camera.awb_gains = g
         camera.capture('sample.jpg')
-        data = {'ecan':'1'}
+        data = {'ecan': '1'}
         files = {'im': open('sample.jpg', 'rb')}
         url = 'http://128.122.72.105:8000/ecan/upload-sample/'
-        r = requests.post(url, data = data, files=files)
+        r = requests.post(url, data=data, files=files)
         print r
     return 'done'
 
 
-cont = 'y'
-while cont == 'y':
-    preview = raw_input("Preview? [y/n]")
-    if preview == 'y':
-        while preview == 'y':
-            take= raw_input("Take? [y/n]")
-            if take == 'y': get_preview()
-            preview = raw_input("Keep doing this? [y/n]")
-    samples = raw_input("Number of samples?")
-    item_class = raw_input("What class? ")
-    result = get_data(int(samples), item_class)
-    print result
-    cont = raw_input("Continue? [y/n] ")
-    if cont != 'y' and cont != 'n':
-        cont = 'n'
+# User Interface #
+try:
+
+    # Check if gram scale is connected/on 
+    while True:
+        try:
+            get_weight.get()
+            break
+        except ValueError:
+            print "Please connect and turn on the scale"
+
+    # Start process #
+    cont = 'y'
+    while cont == 'y':
+
+        # Take preview of object #
+        # Previews are available at api/site_media/media/sample
+        preview = raw_input("Preview? [y/n]")
+        if preview == 'y':
+            while preview == 'y':
+                take = raw_input("Take? [y/n]")
+                if take == 'y':
+                    get_preview()
+                preview = raw_input("Keep doing this? [y/n]")
+
+        # Collect data #
+        samples = raw_input("Number of samples?")
+        item_class = raw_input("What class? ")
+        result = get_data(int(samples), item_class)
+        print result
+        cont = raw_input("Continue? [y/n] ")
+        if cont != 'y' and cont != 'n':
+            cont = 'n'
+
+except ValueError:
+    GPIO.cleanup()
+
 GPIO.cleanup()
-
-
-### Code Recycling
-## Imports
-
-# import cv2
-# import pygame.camera
-# import pygame.image
-
-# if upload_type == 'bg':
-#   data = {'ecan':'1'}
-#   files = {'back_ground': my_file}
-#   url = 'http://128.122.72.105:8000/ecan/upload-back_ground/'
-#   r = requests.post(url, data = data, files=files)
-#   if r.json()['result'] == 'valid':
-#       bg_pk =r.json()['id']
-#       return bg_pk
-#       print r.json()['result'], 'Back ground id: ', r.json()['id']
-#   else: return 'Operation not completed'
-# if upload_type == 'item':
-
-# if samples <= 40: camera.capture_sequence(outputs(samples, steps, weight), 'jpeg', use_video_port=True)
-# else: 
-#   ints = int(samples/40)
-#   new_samples = [40 for i in range(ints)]
-#   if samples % 40 > 0: new_samples.append(samples % 40)
-#   for e in new_samples:
-#       camera.capture_sequence(outputs(e, steps, weight), 'jpeg', use_video_port=True)
-
-# correct, img = cam.read()
-# cam = cv2.VideoCapture(0) 
-# if correct: cv2.imwrite('usb_cam/usb_cam.jpg',img) #save image

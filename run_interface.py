@@ -1,0 +1,47 @@
+# Functions
+import get_weight
+from set_stepper import *
+from upload_functions import *
+
+# Set GPIOs and url
+set_gpio()
+url = 'http://128.122.72.105:8000'
+
+# User Interface #
+try:
+
+    # Check if gram scale is connected and/or turned on
+    while True:
+        try:
+            get_weight.get()
+            break
+        except ValueError:
+            print "Please connect and turn on the scale"
+
+    # Start process #
+    cont = 'y'
+    while cont == 'y':
+
+        # Take preview of object #
+        # Previews are available at api/site_media/media/sample
+        preview = raw_input("Preview? [y/n]")
+        if preview == 'y':
+            while preview == 'y':
+                take = raw_input("Take? [y/n]")
+                if take == 'y':
+                    get_preview(url)
+                preview = raw_input("Keep doing this? [y/n]")
+
+        # Collect data #
+        samples = raw_input("Number of samples?")
+        item_class = raw_input("What class? ")
+        result = get_data(int(samples), item_class, url)
+        print result
+        cont = raw_input("Continue? [y/n] ")
+        if cont != 'y' and cont != 'n':
+            cont = 'n'
+
+except ValueError:
+    GPIO.cleanup()
+
+GPIO.cleanup()
