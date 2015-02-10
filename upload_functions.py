@@ -2,6 +2,7 @@ import io
 import requests
 import get_weight
 from set_stepper import *
+import picamera
 
 
 def outputs(samples, steps, weight, item_class, url):
