@@ -34,8 +34,10 @@ try:
 
         # Collect data #
         samples = raw_input("Number of samples?")
-        item_class = raw_input("What class? ")
-        result = get_data(int(samples), item_class, url)
+        item_attributes = {}
+        item_attributes['item_class'] = raw_input("What class? ")
+        item_attributes['test_train'] = raw_input("Train or test? [1/0]")
+        result = get_data(int(samples), item_attributes, url)
         print result
         cont = raw_input("Continue? [y/n] ")
         if cont != 'y' and cont != 'n':

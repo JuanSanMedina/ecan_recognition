@@ -5,7 +5,7 @@ from set_stepper import *
 import picamera
 
 
-def outputs(samples, steps, weight, item_class, url):
+def outputs(samples, steps, weight, item_attributes, url):
     global start
     url_item = url + '/ecan/upload/'
     url_bg = url + '/ecan/upload-back_ground/'
@@ -47,7 +47,8 @@ def outputs(samples, steps, weight, item_class, url):
             data_item = {
                 'ecan': '1', 'bg': bg_pk,
                 'weight': weight,
-                'item_class': item_class}
+                'item_class': item_attributes['item_class'],
+                'test_train': item_attributes['test_train']}
             files_item = {'im': my_file}
             r = requests.post(
                 url_item, data=data_item, files=files_item)
@@ -57,7 +58,7 @@ def outputs(samples, steps, weight, item_class, url):
         stream.seek(0)
 
 
-def get_data(samples, item_class, url):
+def get_data(samples, item_attributes, url):
 
     # Fix Camera Parameters #
     with picamera.PiCamera() as camera:
@@ -80,7 +81,7 @@ def get_data(samples, item_class, url):
         # Record Data #
         steps = int(512 / samples)
         camera.capture_sequence(
-            outputs(samples, steps, weight, item_class, url),
+            outputs(samples, steps, weight, item_attributes, url),
             'jpeg', use_video_port=True)
         finish = time.time()
         print'Captured %s' % samples + ' images in %.2fs' % (finish - start)
