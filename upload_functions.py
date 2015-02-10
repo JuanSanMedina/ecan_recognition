@@ -106,5 +106,5 @@ def get_preview(url):
         files = {'im': open('sample.jpg', 'rb')}
         url_preview = url + '/ecan/upload-sample/'
         r = requests.post(url_preview, data=data, files=files)
-        print r
+        print r.text
     return 'done'
