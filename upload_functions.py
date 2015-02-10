@@ -17,6 +17,8 @@ def outputs(samples, steps, weight, item_class, url):
         cont = raw_input("ready? [y] ")
         if cont != 'y':
             cont = 'n'
+
+    # Start Camara Streaming #
     stream = io.BytesIO()
     for i in range(samples + 4):
         yield stream
@@ -56,6 +58,8 @@ def outputs(samples, steps, weight, item_class, url):
 
 
 def get_data(samples, item_class, url):
+
+    # Fix Camera Parameters #
     with picamera.PiCamera() as camera:
         camera.led = False
         global start
@@ -69,7 +73,11 @@ def get_data(samples, item_class, url):
         g = camera.awb_gains
         camera.awb_mode = 'off'
         camera.awb_gains = g
+
+        # Record weight #
         weight = get_weight.get()
+
+        # Record Data #
         steps = int(512 / samples)
         camera.capture_sequence(
             outputs(samples, steps, weight, item_class, url),
@@ -80,6 +88,8 @@ def get_data(samples, item_class, url):
 
 
 def get_preview(url):
+
+    # Fix Camera Parameters #
     with picamera.PiCamera() as camera:
         camera.resolution = (640, 480)
         camera.iso = 200
