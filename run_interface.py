@@ -45,5 +45,7 @@ try:
 
 except ValueError:
     GPIO.cleanup()
+except KeyboardInterrupt:
+    GPIO.cleanup()
 
 GPIO.cleanup()
