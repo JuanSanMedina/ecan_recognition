@@ -92,6 +92,7 @@ def get_preview(url):
 
     # Fix Camera Parameters #
     with picamera.PiCamera() as camera:
+        camera.led = False
         camera.resolution = (640, 480)
         camera.iso = 200
         camera.framerate = 10
