@@ -42,10 +42,9 @@ try:
         cont = raw_input("Continue? [y/n] ")
         if cont != 'y' and cont != 'n':
             cont = 'n'
+            GPIO.cleanup()
 
 except ValueError:
     GPIO.cleanup()
 except KeyboardInterrupt:
     GPIO.cleanup()
-
-GPIO.cleanup()
