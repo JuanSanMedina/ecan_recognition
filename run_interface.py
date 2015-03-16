@@ -2,6 +2,10 @@
 import get_weight
 from set_stepper import *
 from upload_functions import *
+import time
+
+# Object identifier
+ts = time.time()
 
 # Set GPIOs and url
 set_gpio()
@@ -13,9 +17,10 @@ try:
     # Check if gram scale is connected and/or turned on
     while True:
         try:
-            get_weight.get()
+            print 'Does this weight make sense?'
+            print get_weight.get()
             break
-        except ValueError:
+        except 'NoneType':
             print "Please connect and turn on the scale"
 
     # Start process #
@@ -33,7 +38,7 @@ try:
                 preview = raw_input("Keep doing this? [y/n]")
 
         # Collect data #
-        samples = raw_input("Number of samples?")
+        samples = raw_input("Number of samples? [max: 512]")
         item_attributes = {}
         item_attributes['item_class'] = raw_input("What class? ")
         item_attributes['test_train'] = raw_input("Train or test? [1/0]")
