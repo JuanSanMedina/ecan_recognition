@@ -3,6 +3,7 @@ import get_weight
 from set_stepper import *
 from upload_functions import *
 import time
+import cmd2
 
 # Object identifier
 ts = time.time()

@@ -1,11 +1,10 @@
 import io
 import requests
-import get_weight
 from set_stepper import *
 import picamera
 
 
-def outputs(samples, steps, weight, item_attributes, url):
+def outputs(samples, steps, item_attributes, url):
     global start
     url_item = url + '/ecan/upload/'
     url_bg = url + '/ecan/upload-back_ground/'
@@ -44,11 +43,9 @@ def outputs(samples, steps, weight, item_attributes, url):
             start = time.time()
         elif i > 3:
             my_file = stream
-            data_item = {
-                'ecan': '1', 'bg': bg_pk,
-                'weight': weight,
-                'item_class': item_attributes['item_class'],
-                'test_train': item_attributes['test_train']}
+            item_attributes['bg'] = bg_pk
+            item_attributes['ecan'] = '1'
+            data_item = item_attributes
             files_item = {'im': my_file}
             r = requests.post(
                 url_item, data=data_item, files=files_item)
@@ -75,13 +72,10 @@ def get_data(samples, item_attributes, url):
         camera.awb_mode = 'off'
         camera.awb_gains = g
 
-        # Record weight #
-        weight = get_weight.get()
-
         # Record Data #
         steps = int(512 / samples)
         camera.capture_sequence(
-            outputs(samples, steps, weight, item_attributes, url),
+            outputs(samples, steps, item_attributes, url),
             'jpeg', use_video_port=True)
         finish = time.time()
         print'Captured %s' % samples + ' images in %.2fs' % (finish - start)
