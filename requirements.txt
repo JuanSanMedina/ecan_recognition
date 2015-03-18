@@ -8,11 +8,12 @@
 # pygame==1.9.1
 # six==1.9.0
 # pygobject==3.8.2
-RPi.GPIO==0.5.8
-argparse==1.2.1
+cmd2==0.6.8
 pbr==0.10.8
 picamera==1.8
+pyparsing==2.0.3
 pyserial==2.5
 pyusb==1.0.0b2
-termcolor==1.1.0
 requests==2.4.3
+RPi.GPIO==0.5.8
+termcolor==1.1.0
