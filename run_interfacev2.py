@@ -14,8 +14,8 @@ class ecan_interface(cmd2.Cmd):
     """Ecan Command Line Interface Application."""
 
     # Set GPIOs and url
-    # url = 'http://128.122.72.105:8000'
-    url = 'http://127.0.0.1:8000'
+    url = 'http://128.122.72.105:8000'
+    # url = 'http://127.0.0.1:8000'
 
     # Class variables
     ATT_KEYS = ['brand', 'shape', 'material', 'description']
