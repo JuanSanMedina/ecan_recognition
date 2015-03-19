@@ -37,6 +37,7 @@ def get():
     print raw_weight
     return float(raw_weight)
 
+get()
 
 #   DATA_MODE_GRAMS = 2
 #   DATA_MODE_OUNCES = 11
