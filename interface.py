@@ -66,7 +66,7 @@ class ecan_interface(cmd2.Cmd):
                 break
                 return
 
-    def do_upload(self):
+    def do_upload(self, arg):
         """Data collection function
         Gets no arguments neither options
         """
@@ -128,7 +128,7 @@ class ecan_interface(cmd2.Cmd):
                 readline.set_completer(self.complete)
                 break
 
-    def do_take_preview(self):
+    def do_take_preview(self, arg):
         """Run to take an ecan preview"""
         while True:
             take = self.select(['yes', 'no'], "Take?")
