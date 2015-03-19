@@ -28,7 +28,6 @@ def get():
                 device.read(endpoint.bEndpointAddress, endpoint.wMaxPacketSize)
         except usb.core.USBError as e:
             data = None
-            print 'USB error'
             if e.args == ('Operation timed out',):
                 attempts -= 1
                 continue
@@ -37,7 +36,6 @@ def get():
     print raw_weight
     return float(raw_weight)
 
-get()
 
 #   DATA_MODE_GRAMS = 2
 #   DATA_MODE_OUNCES = 11
