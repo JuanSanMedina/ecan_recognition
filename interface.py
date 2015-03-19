@@ -163,7 +163,6 @@ class ecan_interface(cmd2.Cmd):
             try:
                 import weight
                 w = weight.get()
-                print str(w) + juan
                 print '\nCurrent weight %s:' % \
                     colored(w, 'blue', attrs=['bold'])
                 ans = self.select(['yes', 'no'],
