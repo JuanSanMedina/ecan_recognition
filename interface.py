@@ -131,11 +131,11 @@ class ecan_interface(cmd2.Cmd):
     def do_take_preview(self, arg):
         """Run to take an ecan preview"""
         while True:
-            take = self.select(['yes', 'no'], "Take?")
-            if take == 'yes':
+            print '\n'
+            ans = self.select(['yes', 'no'], "Take?")
+            if ans == 'yes':
                 uf.get_preview(self.url)
-            ans = self.select(['yes', 'no'], "Keep taking?")
-            if ans == 'no':
+            elif ans == 'no':
                 break
 
     def upload_insert(self, arg):
