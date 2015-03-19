@@ -58,7 +58,6 @@ class ecan_interface(cmd2.Cmd):
 
         while True:
             self.upload_insert(arg=arg)
-            print '\n'
             color_arg = colored(arg, 'blue', attrs=['bold'])
             ans = self.select(['yes', 'no'],
                               'Add other %s?: ' % color_arg)
@@ -79,7 +78,7 @@ class ecan_interface(cmd2.Cmd):
 
             # Take preview of object
             # Previews are available at api/site_media/media/sample
-            ans = self.select(['yes', 'no'], "Take preview?")
+            ans = self.select(['yes', 'no'], "Take preview?: ")
             if ans == 'yes':
                 self.do_take_preview()
 
@@ -89,7 +88,7 @@ class ecan_interface(cmd2.Cmd):
 
             # Ask for transparency
             item_att['transparency'] = \
-                self.select(['yes', 'no'], "Is transparent?")
+                self.select(['yes', 'no'], "Is it transparent?: ")
 
             # Run data collection
             while True:
@@ -98,7 +97,7 @@ class ecan_interface(cmd2.Cmd):
 
                 # Select number of samples
                 samples = self.select(['90', '180', '360'],
-                                      'Select number of samples:')
+                                      'Select number of samples: ')
 
                 # Set item identifier
                 item_att['identifier'] = time.time()
@@ -106,22 +105,22 @@ class ecan_interface(cmd2.Cmd):
                 # Confirm data package
                 print '\nData package:'
                 print item_att
-                print 'Number of samples %s' % samples
+                print 'Number of samples %s\n' % samples
                 attention = colored('Atention! ', 'yellow', attrs=['bold'])
                 ans = self.select(['yes', 'no'],
-                                  attention + 'Confirm data-package?')
+                                  attention + 'Confirm data-package?: ')
                 if ans == 'yes':
                     result = uf.get_data(int(samples), item_att, self.url)
                     print result
 
                 # Run with same data_package?
                 ans = self.select(['yes', 'no'],
-                                  'Run again with same attributes?')
+                                  'Run again with same attributes?: ')
                 if ans == 'no':
                     break
 
             # Continue data collection?
-            ans = self.select(['yes', 'no'], 'Continue data collection?')
+            ans = self.select(['yes', 'no'], 'Continue data collection?: ')
             if ans == 'yes':
                 pass
             else:
@@ -131,8 +130,7 @@ class ecan_interface(cmd2.Cmd):
     def do_take_preview(self, arg):
         """Run to take an ecan preview"""
         while True:
-            print '\n'
-            ans = self.select(['yes', 'no'], "Take?")
+            ans = self.select(['yes', 'no'], "Take?: ")
             if ans == 'yes':
                 uf.get_preview(self.url)
             elif ans == 'no':
@@ -142,9 +140,8 @@ class ecan_interface(cmd2.Cmd):
         # Ask for new value
         while True:
             ans = raw_input('\nEnter %s:' % arg).lower().replace(' ', '_')
-            print '\n'
             cont = self.select(['yes', 'no'],
-                               "Proceed?")
+                               "Proceed?: ")
             if cont == 'yes' and ans not in self.ATT_DICT[arg].keys():
                 break
             elif ans not in self.ATT_DICT[arg].keys():
@@ -164,12 +161,11 @@ class ecan_interface(cmd2.Cmd):
     def weight(self):
         while True:
             try:
-                # w = get_weight.get()
-                w = 10
+                w = get_weight.get()
                 print '\nCurrent weight %s:' % \
                     colored(w, 'blue', attrs=['bold'])
                 ans = self.select(['yes', 'no'],
-                                  "does this weight make sense?")
+                                  "does this weight make sense?: ")
                 if ans == 'yes':
                     break
             except 'NoneType':
@@ -184,7 +180,7 @@ class ecan_interface(cmd2.Cmd):
             readline.set_completer(completer.complete)
             ans = self.select(['View existing',
                                'Insert new', 'Insert existing'],
-                              'Please select one option:')
+                              'Please select one option: ')
 
             # View existing
             if ans == 'View existing':
@@ -204,7 +200,7 @@ class ecan_interface(cmd2.Cmd):
 
                 while True:
                     ans = raw_input(prompt).lower()
-                    cont = self.select(['yes', 'no'], "Continue?")
+                    cont = self.select(['yes', 'no'], "Continue?: ")
                     if cont == 'yes' and ans not in self.ATT_DICT[k].keys():
                         value = self.ATT_DICT[k][ans]
                         break
@@ -249,6 +245,45 @@ class ecan_interface(cmd2.Cmd):
 
     def do_EOF(self, line):
         return True
+
+    def select(self, options, prompt='Your choice? '):
+        '''Presents a numbered menu to the user.  Modelled after
+           the bash shell's SELECT.  Returns the item chosen.
+
+           Argument ``options`` can be:
+
+             | a single string -> will be split into one-word options
+             | a list of strings -> will be offered as options
+             | a list of tuples -> interpreted as (value, text), so
+                                   that the return value can differ from
+                                   the text advertised to the user '''
+        if isinstance(options, basestring):
+            options = zip(options.split(), options.split())
+        fulloptions = []
+        for opt in options:
+            if isinstance(opt, basestring):
+                fulloptions.append((opt, opt))
+            else:
+                try:
+                    fulloptions.append((opt[0], opt[1]))
+                except IndexError:
+                    fulloptions.append((opt[0], opt[0]))
+        flag = True
+        for (idx, (value, text)) in enumerate(fulloptions):
+            if flag:
+                self.poutput('  \n%2d. %s\n' % (idx+1, text))
+                flag = False
+            else:
+                self.poutput('  %2d. %s\n' % (idx+1, text))
+        while True:
+            response = raw_input(prompt)
+            try:
+                response = int(response)
+                result = fulloptions[response - 1][0]
+                break
+            except ValueError:
+                pass # loop and ask again
+        return result
 
 if __name__ == '__main__':
     if hostname == 'CUSP-raspberrypi':
