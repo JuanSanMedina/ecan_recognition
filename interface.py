@@ -93,7 +93,7 @@ class ecan_interface(cmd2.Cmd):
             # Run data collection
             while True:
                 # Check if gram scale and collect weight
-                item_att['weight'] = self.weight()
+                item_att['weight'] = self.do_get_weight()
 
                 # Select number of samples
                 samples = self.select(['90', '180', '360'],
@@ -127,7 +127,7 @@ class ecan_interface(cmd2.Cmd):
                 readline.set_completer(self.complete)
                 break
 
-    def do_take_preview(self, arg):
+    def do_take_preview(self, arg=None):
         """Run to take an ecan preview"""
         while True:
             ans = self.select(['yes', 'no'], "Take?: ")
@@ -158,7 +158,7 @@ class ecan_interface(cmd2.Cmd):
         print '\t'.join(colored(e, 'green',
                                 attrs=['bold']) for e in d.keys())
 
-    def weight(self):
+    def do_weight(self, arg=None):
         while True:
             try:
                 w = get_weight.get()
