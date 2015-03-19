@@ -158,7 +158,7 @@ class ecan_interface(cmd2.Cmd):
         print '\t'.join(colored(e, 'green',
                                 attrs=['bold']) for e in d.keys())
 
-    def do_weight(self, arg=None):
+    def do_get_weight(self, arg=None):
         while True:
             try:
                 w = get_weight.get()
@@ -168,7 +168,7 @@ class ecan_interface(cmd2.Cmd):
                                   "does this weight make sense?: ")
                 if ans == 'yes':
                     break
-            except 'NoneType':
+            except AttributeError:
                 print "Please connect and turn on the scale"
         return w
 
