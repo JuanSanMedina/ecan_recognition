@@ -93,7 +93,7 @@ class ecan_interface(cmd2.Cmd):
             # Run data collection
             while True:
                 # Check if gram scale and collect weight
-                item_att['weight'] = self.do_get_weight()
+                item_att['weight'] = self.do_get_weight('return')
 
                 # Select number of samples
                 samples = self.select(['90', '180', '360'],
@@ -167,18 +167,17 @@ class ecan_interface(cmd2.Cmd):
                 ans = self.select(['yes', 'no'],
                                   "does this weight make sense?: ")
                 if ans == 'yes':
-                    # if arg is None:
-                    #     return
-                    # if arg is 'return':
-                    #     return w
-                        break
+                    if arg is None:
+                        return
+                    if arg is 'return':
+                        return w
+                    break
             except AttributeError:
                 print "Please connect and turn on the scale"
                 ans = self.select(['yes', 'no'],
                                   "ready?: ")
                 if ans == 'no':
                     break
-        return w
 
     def get_attributes(self, k):
         print '\nInsert %s:' % colored(k, 'blue', attrs=['bold'])
