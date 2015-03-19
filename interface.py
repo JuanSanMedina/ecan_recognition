@@ -163,12 +163,13 @@ class ecan_interface(cmd2.Cmd):
             try:
                 import weight
                 w = weight.get()
-                print w
+                print str(w) + juan
                 print '\nCurrent weight %s:' % \
                     colored(w, 'blue', attrs=['bold'])
                 ans = self.select(['yes', 'no'],
                                   "does this weight make sense?: ")
                 if ans == 'yes':
+                    return w
                     break
             except AttributeError:
                 print "Please connect and turn on the scale"
@@ -176,7 +177,6 @@ class ecan_interface(cmd2.Cmd):
                                   "ready?: ")
                 if ans == 'no':
                     break
-        return w
 
     def get_attributes(self, k):
         print '\nInsert %s:' % colored(k, 'blue', attrs=['bold'])
