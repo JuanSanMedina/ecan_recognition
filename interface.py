@@ -201,7 +201,7 @@ class ecan_interface(cmd2.Cmd):
                 while True:
                     ans = raw_input(prompt).lower()
                     cont = self.select(['yes', 'no'], "Continue?: ")
-                    if cont == 'yes' and ans not in self.ATT_DICT[k].keys():
+                    if cont == 'yes' and ans in self.ATT_DICT[k].keys():
                         value = self.ATT_DICT[k][ans]
                         break
                     else:
