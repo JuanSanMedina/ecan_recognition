@@ -170,6 +170,8 @@ class ecan_interface(cmd2.Cmd):
                     break
             except AttributeError:
                 print "Please connect and turn on the scale"
+                ans = self.select(['yes', 'no'],
+                                  "ready?: ")
         return w
 
     def get_attributes(self, k):
