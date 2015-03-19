@@ -167,7 +167,7 @@ class ecan_interface(cmd2.Cmd):
                 ans = self.select(['yes', 'no'],
                                   "does this weight make sense?: ")
                 if ans == 'yes':
-                    return w
+                    return
                     break
             except AttributeError:
                 print "Please connect and turn on the scale"
