@@ -28,6 +28,7 @@ def get():
                 device.read(endpoint.bEndpointAddress, endpoint.wMaxPacketSize)
         except usb.core.USBError as e:
             data = None
+            print 'USB error'
             if e.args == ('Operation timed out',):
                 attempts -= 1
                 continue
