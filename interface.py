@@ -1,7 +1,7 @@
 import socket
 hostname = socket.gethostname()
 if hostname == 'CUSP-raspberrypi':
-    import weight
+    # import weight
     import RPi.GPIO as GPIO
     import set_stepper as stepper
     import upload_functions as uf
@@ -161,7 +161,9 @@ class ecan_interface(cmd2.Cmd):
     def do_get_weight(self, arg=None):
         while True:
             try:
+                import weight
                 w = weight.get()
+                print w
                 print '\nCurrent weight %s:' % \
                     colored(w, 'blue', attrs=['bold'])
                 ans = self.select(['yes', 'no'],
@@ -172,7 +174,7 @@ class ecan_interface(cmd2.Cmd):
                 print "Please connect and turn on the scale"
                 ans = self.select(['yes', 'no'],
                                   "ready?: ")
-                if ans == no:
+                if ans == 'no':
                     break
         return w
 
