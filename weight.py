@@ -33,6 +33,7 @@ def get():
                 continue
     raw_weight = data[4] + data[5] * 256
     device.detach_kernel_driver(0)
+    print raw_weight
     return float(raw_weight)
 
 
