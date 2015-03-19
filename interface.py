@@ -271,7 +271,7 @@ class ecan_interface(cmd2.Cmd):
         flag = True
         for (idx, (value, text)) in enumerate(fulloptions):
             if flag:
-                self.poutput('  \n%2d. %s\n' % (idx+1, text))
+                self.poutput('\n  %2d. %s\n' % (idx+1, text))
                 flag = False
             else:
                 self.poutput('  %2d. %s\n' % (idx+1, text))
