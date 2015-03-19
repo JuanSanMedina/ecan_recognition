@@ -100,7 +100,7 @@ class ecan_interface(cmd2.Cmd):
                                       'Select number of samples: ')
 
                 # Set item identifier
-                item_att['identifier'] = time.time()
+                item_att['identifier'] = '%.2f' % time.time()
 
                 # Confirm data package
                 print '\nData package:'
@@ -139,11 +139,13 @@ class ecan_interface(cmd2.Cmd):
     def upload_insert(self, arg):
         # Ask for new value
         while True:
-            ans = raw_input('\nEnter %s:' % arg).lower().replace(' ', '_')
+            ans = raw_input('\nEnter %s: ' % arg).lower().replace(' ', '_')
             cont = self.select(['yes', 'no'],
                                "Proceed?: ")
             if cont == 'yes' and ans not in self.ATT_DICT[arg].keys():
                 break
+            elif cont == 'no':
+                return
             elif ans not in self.ATT_DICT[arg].keys():
                 print arg + ' already exists'
 
@@ -207,8 +209,9 @@ class ecan_interface(cmd2.Cmd):
 
                 while True:
                     ans = raw_input(prompt).lower()
-                    cont = self.select(['yes', 'no'], "Continue?: ")
-                    if cont == 'yes' and ans in self.ATT_DICT[k].keys():
+                    # cont = self.select(['yes', 'no'], "Continue?: ")
+                    # if cont == 'yes' and ans in self.ATT_DICT[k].keys():
+                    if ans in self.ATT_DICT[k].keys():
                         value = self.ATT_DICT[k][ans]
                         break
                     else:
