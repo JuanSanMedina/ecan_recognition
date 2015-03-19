@@ -167,14 +167,18 @@ class ecan_interface(cmd2.Cmd):
                 ans = self.select(['yes', 'no'],
                                   "does this weight make sense?: ")
                 if ans == 'yes':
-                    return
-                    break
+                    # if arg is None:
+                    #     return
+                    # if arg is 'return':
+                    #     return w
+                        break
             except AttributeError:
                 print "Please connect and turn on the scale"
                 ans = self.select(['yes', 'no'],
                                   "ready?: ")
                 if ans == 'no':
                     break
+        return w
 
     def get_attributes(self, k):
         print '\nInsert %s:' % colored(k, 'blue', attrs=['bold'])
