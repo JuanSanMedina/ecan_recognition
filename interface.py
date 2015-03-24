@@ -100,7 +100,7 @@ class ecan_interface(cmd2.Cmd):
                             else:
                                 pos -= 1
                         else:
-                            item_att[keys[pos]] = self.ATT_[keys[pos]][ans]
+                            item_att[keys[pos]] = ans
                             pos += 1
                     except IndexError:
                         break
@@ -261,7 +261,7 @@ class ecan_interface(cmd2.Cmd):
                 break
 
             else:
-                value = ans
+                value = self.ATT_DICT[k][ans]
                 break
 
 
