@@ -73,74 +73,77 @@ class ecan_interface(cmd2.Cmd):
         Gets no arguments neither options
         """
         same_package = False
-        # Start process
-        while True:
-            # Initialize item dictionary
-            keys = ['weight', 'identifier', 'common_name', 'shape',
-                    'material', 'logo', 'transparency']
-            item_att = dict.fromkeys(keys)
-
-            # Take preview of object
-            # Previews are available at api/site_media/media/sample
-            ans = self.select(['yes', 'no'], "Take preview?: ")
-            if ans == 'yes':
-                self.do_take_preview()
-
-            # Get attributes
-            for k in self.ATT_KEYS:
-                item_att[k] = self.get_attributes(k)
-
-            # Ask for transparency
-            item_att['transparency'] = \
-                self.select(['yes', 'no'], "Is it transparent?: ")
-
-            # Run data collection
+        try:
+            # Start process
             while True:
-                # Check if gram scale and collect weight
-                if not same_package:
-                    item_att['weight'] = self.do_get_weight('return')
+                # Initialize item dictionary
+                keys = ['weight', 'identifier', 'common_name', 'shape',
+                        'material', 'logo', 'transparency']
+                item_att = dict.fromkeys(keys)
 
-                # Select number of samples
-                samples = self.select(['90', '180', '360'],
-                                      'Select number of samples: ')
-
-                # Set item identifier
-                item_att['identifier'] = '%.2f' % time.time()
-
-                # Confirm data package
-                print '\nData package:'
-                print item_att
-                print 'Number of samples %s\n' % samples
-                attention = colored('Atention! ', 'yellow', attrs=['bold'])
-                ans = self.select(['yes', 'no'],
-                                  attention + 'Confirm data-package?: ')
+                # Take preview of object
+                # Previews are available at api/site_media/media/sample
+                ans = self.select(['yes', 'no'], "Take preview?: ")
                 if ans == 'yes':
-                    result = uf.get_data(int(samples), item_att, self.url)
-                    self.UP_IT[item_att['identifier']] = 1
-                    print result
+                    self.do_take_preview()
 
-                # delete previous?
-                ans = self.select(['yes', 'no'],
-                                  'delete previous?: ')
+                # Get attributes
+                for k in self.ATT_KEYS:
+                    item_att[k] = self.get_attributes(k)
+
+                # Ask for transparency
+                item_att['transparency'] = \
+                    self.select(['yes', 'no'], "Is it transparent?: ")
+
+                # Run data collection
+                while True:
+                    # Check if gram scale and collect weight
+                    if not same_package:
+                        item_att['weight'] = self.do_get_weight('return')
+
+                    # Select number of samples
+                    samples = self.select(['90', '180', '360'],
+                                          'Select number of samples: ')
+
+                    # Set item identifier
+                    item_att['identifier'] = '%.2f' % time.time()
+
+                    # Confirm data package
+                    print '\nData package:'
+                    print item_att
+                    print 'Number of samples %s\n' % samples
+                    attention = colored('Atention! ', 'yellow', attrs=['bold'])
+                    ans = self.select(['yes', 'no'],
+                                      attention + 'Confirm data-package?: ')
+                    if ans == 'yes':
+                        result = uf.get_data(int(samples), item_att, self.url)
+                        self.UP_IT[item_att['identifier']] = 1
+                        print result
+
+                    # delete previous?
+                    ans = self.select(['yes', 'no'],
+                                      'delete previous?: ')
+                    if ans == 'yes':
+                        self.do_delete_object(item_att['identifier'])
+
+                    # Run with same data_package?
+                    ans = self.select(['yes', 'no'],
+                                      'Run again with same attributes?: ')
+                    if ans == 'no':
+                        same_package = False
+                        break
+                    else:
+                        same_package = True
+
+                # Continue data collection?
+                ans = self.select(['yes', 'no'], 'Continue data collection?: ')
                 if ans == 'yes':
-                    self.do_delete_object(item_att['identifier'])
-
-                # Run with same data_package?
-                ans = self.select(['yes', 'no'],
-                                  'Run again with same attributes?: ')
-                if ans == 'no':
-                    same_package = False
-                    break
+                    pass
                 else:
-                    same_package = True
-
-            # Continue data collection?
-            ans = self.select(['yes', 'no'], 'Continue data collection?: ')
-            if ans == 'yes':
-                pass
-            else:
-                readline.set_completer(self.complete)
-                break
+                    readline.set_completer(self.complete)
+                    break
+    except:
+        readline.set_completer(self.complete)
 
     def do_take_preview(self, arg=None):
         """Run to take an ecan preview"""
