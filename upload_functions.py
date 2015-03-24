@@ -3,6 +3,7 @@ import requests
 from set_stepper import *
 import picamera
 import math
+import weight
 
 
 def outputs(samples, steps, item_attributes, url):
@@ -39,6 +40,8 @@ def outputs(samples, steps, item_attributes, url):
             cont = 'n'
             while cont != 'y':
                 cont = raw_input("ready? [y] ")
+                if cont == 'y':
+                    item_attributes['weight'] = weight.get()
                 if cont != 'y':
                     cont = 'n'
             start = time.time()

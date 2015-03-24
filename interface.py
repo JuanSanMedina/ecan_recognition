@@ -99,8 +99,8 @@ class ecan_interface(cmd2.Cmd):
                 while True:
                     # Check if gram scale and collect weight
                     if not same_package:
-                        item_att['weight'] = self.do_get_weight('return')
-
+                        w = self.do_get_weight('return')
+                        w
                     # Select number of samples
                     samples = self.select(['90', '180', '360'],
                                           'Select number of samples: ')
