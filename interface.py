@@ -135,15 +135,15 @@ class ecan_interface(cmd2.Cmd):
                     else:
                         same_package = True
 
-                # Continue data collection?
+                # Csontinue data collection?
                 ans = self.select(['yes', 'no'], 'Continue data collection?: ')
                 if ans == 'yes':
                     pass
                 else:
                     readline.set_completer(self.complete)
                     break
-    except:
-        readline.set_completer(self.complete)
+        except:
+            readline.set_completer(self.complete)
 
     def do_take_preview(self, arg=None):
         """Run to take an ecan preview"""
