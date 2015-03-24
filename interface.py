@@ -93,7 +93,6 @@ class ecan_interface(cmd2.Cmd):
                 while True:
                     try:
                         ans = self.get_attributes(keys[pos])
-                        print ans
                         if ans ==  colored('go back', 'blue'):
                             if pos == 0:
                                 pos = 0
@@ -111,24 +110,23 @@ class ecan_interface(cmd2.Cmd):
 
                 # Run data collection
                 while True:
-                    # Check if gram scale and collect weight
-                    if not same_package:
-                        w = self.do_get_weight('return')
-                        w
-                    # Select number of samples
-                    samples = self.select(['90', '180', '360'],
-                                          'Select number of samples: ')
-
                     # Set item identifier
                     item_att['identifier'] = '%.2f' % time.time()
+                    # Check if gram scale and collect weight
+                    if not same_package:
+                        self.do_get_weight('return')
 
-                    # Confirm data package
-                    print '\nData package:'
-                    print item_att
-                    print 'Number of samples %s\n' % samples
-                    attention = colored('Atention! ', 'yellow', attrs=['bold'])
-                    ans = self.select(['yes', 'no'],
-                                      attention + 'Confirm data-package?: ')
+                        # Select number of samples
+                        samples = self.select(['90', '180', '360'],
+                                              'Select number of samples: ')
+
+                        # Confirm data package
+                        print '\nData package:'
+                        print item_att
+                        print 'Number of samples %s\n' % samples
+                        attention = colored('Atention! ', 'yellow', attrs=['bold'])
+                        ans = self.select(['yes', 'no'],
+                                          attention + 'Confirm data-package?: ')
                     if ans == 'yes':
                         result = uf.get_data(int(samples), item_att, self.url)
                         self.UP_IT[item_att['identifier']] = 1

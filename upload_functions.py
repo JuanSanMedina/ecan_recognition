@@ -14,9 +14,9 @@ def outputs(samples, steps, item_attributes, url):
     # Take photo of background #
     cont = 'n'
     print 'Prepare for back_ground capture'
-    while cont != 'y':
-        cont = raw_input("ready? [y] ")
-        if cont != 'y':
+    while cont != '1':
+        cont = raw_input("ready? [1] ")
+        if cont != '1':
             cont = 'n'
 
     # Start Camara Streaming #
@@ -38,11 +38,11 @@ def outputs(samples, steps, item_attributes, url):
             # Place Item and upload data #
             print 'Place item'
             cont = 'n'
-            while cont != 'y':
-                cont = raw_input("ready? [y] ")
-                if cont == 'y':
+            while cont != '1':
+                cont = raw_input("ready? [1] ")
+                if cont == '1':
                     item_attributes['weight'] = weight.get()
-                if cont != 'y':
+                if cont != '1':
                     cont = 'n'
             start = time.time()
         elif i > 3:
