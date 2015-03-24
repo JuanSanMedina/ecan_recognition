@@ -93,14 +93,14 @@ class ecan_interface(cmd2.Cmd):
                 while True:
                     try:
                         ans = self.get_attributes(keys[pos])
-                        if ans != 'go back':
-                            item_att[keys[pos]] = ans
-                            pos += 1
-                        else:
+                        if ans == 'go back':
                             if pos == 0:
                                 pos = 0
                             else:
-                                pos = pos - 1
+                                pos -= 1
+                        else:
+                            item_att[keys[pos]] = ans
+                            pos += 1
                     except IndexError:
                         break
 
