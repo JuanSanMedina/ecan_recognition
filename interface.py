@@ -94,7 +94,7 @@ class ecan_interface(cmd2.Cmd):
                     try:
                         ans = self.get_attributes(keys[pos])
                         print ans
-                        if ans == 'go back':
+                        if ans ==  colored('go back', 'blue'):
                             if pos == 0:
                                 pos = 0
                             else:
