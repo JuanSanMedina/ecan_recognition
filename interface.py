@@ -72,6 +72,7 @@ class ecan_interface(cmd2.Cmd):
         """Data collection function
         Gets no arguments neither options
         """
+        same_package = False
         # Start process
         while True:
             # Initialize item dictionary
@@ -96,7 +97,8 @@ class ecan_interface(cmd2.Cmd):
             # Run data collection
             while True:
                 # Check if gram scale and collect weight
-                item_att['weight'] = self.do_get_weight('return')
+                if not same_package:
+                    item_att['weight'] = self.do_get_weight('return')
 
                 # Select number of samples
                 samples = self.select(['90', '180', '360'],
@@ -117,11 +119,20 @@ class ecan_interface(cmd2.Cmd):
                     self.UP_IT[item_att['identifier']] = 1
                     print result
 
+                # delete previous?
+                ans = self.select(['yes', 'no'],
+                                  'delete previous?: ')
+                if ans == 'yes':
+                    self.do_delete_object(item_att['identifier'])
+
                 # Run with same data_package?
                 ans = self.select(['yes', 'no'],
                                   'Run again with same attributes?: ')
                 if ans == 'no':
+                    same_package = False
                     break
+                else:
+                    same_package = True
 
             # Continue data collection?
             ans = self.select(['yes', 'no'], 'Continue data collection?: ')
@@ -149,7 +160,7 @@ class ecan_interface(cmd2.Cmd):
             print r.json()['result']
         else:
             while True:
-                identifier = self.select(self.UP_IT.keys(),
+                identifier = self.select(str(sorted(float(self.UP_IT.keys()))),
                                          "Select object to delete: ")
                 ans = self.select(['yes', 'no'], "Continue?: ")
                 if ans == 'yes':
@@ -157,6 +168,8 @@ class ecan_interface(cmd2.Cmd):
                     r = requests.get(self.url + '/ecan/delete_object/',
                                      params=data)
                     print r.json()['result']
+                    if r.json()['result'] == 'valid':
+                        self.UP_IT.pop(identifier, None)
                 elif ans == 'no':
                     break
 
