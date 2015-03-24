@@ -241,7 +241,9 @@ class ecan_interface(cmd2.Cmd):
         while True:
             completer = self.Completer(['1', '2', '3'])
             readline.set_completer(completer.complete)
-            ans = self.select(['Insert new', 'go back'] +
+            opts = [colored(e, 'blue', attrs=['bold'])
+                    for e in ['insert new', 'go back']]
+            ans = self.select(opts +
                               self.ATT_DICT[k].keys(),
                               'Please select one option: ')
 
@@ -254,7 +256,7 @@ class ecan_interface(cmd2.Cmd):
                 self.do_insert(k)
 
             elif ans == 'go back':
-                value = k
+                value = 'go back'
                 break
 
             else:
