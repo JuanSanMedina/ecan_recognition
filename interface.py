@@ -93,6 +93,7 @@ class ecan_interface(cmd2.Cmd):
                 while True:
                     try:
                         ans = self.get_attributes(keys[pos])
+                        print ans
                         if ans == 'go back':
                             if pos == 0:
                                 pos = 0
