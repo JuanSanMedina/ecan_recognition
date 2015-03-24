@@ -1,16 +1,16 @@
+import time
+import readline
+import cmd2
+import requests
+from termcolor import colored
 import socket
+
 hostname = socket.gethostname()
 if hostname == 'CUSP-raspberrypi':
     import weight
     import RPi.GPIO as GPIO
     import set_stepper as stepper
     import upload_functions as uf
-
-import time
-import readline
-import cmd2
-import requests
-from termcolor import colored
 
 
 class ecan_interface(cmd2.Cmd):
@@ -29,6 +29,9 @@ class ecan_interface(cmd2.Cmd):
         data = {'action': 'view', 'att_key': k}
         d = requests.post(url + '/ecan/insert/', data).json()
         ATT_DICT[k] = eval(d['dictionary'])
+
+    # Uploaded items in session
+    UP_IT = {}
 
     @cmd2.options([cmd2.make_option('-v', '--view',
                                     action="store_true",
@@ -111,6 +114,7 @@ class ecan_interface(cmd2.Cmd):
                                   attention + 'Confirm data-package?: ')
                 if ans == 'yes':
                     result = uf.get_data(int(samples), item_att, self.url)
+                    self.UP_IT[item_att['identifier']] = 1
                     print result
 
                 # Run with same data_package?
@@ -135,6 +139,26 @@ class ecan_interface(cmd2.Cmd):
                 uf.get_preview(self.url)
             elif ans == 'no':
                 break
+
+    def do_delete_object(self, arg=None):
+        """Run to take an ecan preview"""
+        if arg:
+            data = {'identifier': arg}
+            r = requests.get(self.url + '/ecan/delete_object/',
+                             params=data)
+            print r.json()['result']
+        else:
+            while True:
+                identifier = self.select(self.UP_IT.keys(),
+                                         "Select object to delete: ")
+                ans = self.select(['yes', 'no'], "Continue?: ")
+                if ans == 'yes':
+                    data = {'identifier': identifier}
+                    r = requests.get(self.url + '/ecan/delete_object/',
+                                     params=data)
+                    print r.json()['result']
+                elif ans == 'no':
+                    break
 
     def upload_insert(self, arg):
         # Ask for new value
@@ -257,7 +281,7 @@ class ecan_interface(cmd2.Cmd):
         return True
 
     def select(self, options, prompt='Your choice? '):
-        '''Presents a numbered menu to the user.  Modelled after
+        """Presents a numbered menu to the user.  Modelled after
            the bash shell's SELECT.  Returns the item chosen.
 
            Argument ``options`` can be:
@@ -266,7 +290,7 @@ class ecan_interface(cmd2.Cmd):
              | a list of strings -> will be offered as options
              | a list of tuples -> interpreted as (value, text), so
                                    that the return value can differ from
-                                   the text advertised to the user '''
+                                   the text advertised to the user """
         if isinstance(options, basestring):
             options = zip(options.split(), options.split())
         fulloptions = []
