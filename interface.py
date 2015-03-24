@@ -88,9 +88,21 @@ class ecan_interface(cmd2.Cmd):
                     self.do_take_preview()
 
                 # Get attributes
-                for k in self.ATT_KEYS:
-                    item_att[k] = self.get_attributes(k)
-
+                keys = self.ATT_KEYS
+                pos = 0
+                while True:
+                    for i, k in enumerate(keys[pos:]):
+                        ans = self.get_attributes(k)
+                        if ans != 'go back':
+                            item_att[k] = ans
+                        else:
+                            if i == 0:
+                                pos = 0
+                            else:
+                                pos = i-1
+                            break
+                    if i == len(keys):
+                        break
                 # Ask for transparency
                 item_att['transparency'] = \
                     self.select(['yes', 'no'], "Is it transparent?: ")
@@ -229,40 +241,49 @@ class ecan_interface(cmd2.Cmd):
         while True:
             completer = self.Completer(['1', '2', '3'])
             readline.set_completer(completer.complete)
-            ans = self.select(['View existing',
-                               'Insert new', 'Insert existing'],
+            ans = self.select(['Insert new', 'go back'] +
+                              self.ATT_DICT[k].keys(),
                               'Please select one option: ')
 
-            # View existing
-            if ans == 'View existing':
-                self.do_insert('-v ' + k)
+            # # View existing
+            # if ans == 'View existing':
+            #     self.do_insert('-v ' + k)
 
             # Insert new
-            elif ans == 'Insert new':
+            if ans == 'Insert new':
                 self.do_insert(k)
 
-            # Insert existing
-            elif ans == 'Insert existing':
-                completer = self.Completer(
-                    self.ATT_DICT[k].keys())
-                readline.set_completer(completer.complete)
-                prompt = colored('\n[double tab for options]',
-                                 'blue', attrs=['bold']) + '\nInsert %s:' % k
-
-                while True:
-                    ans = raw_input(prompt).lower()
-                    # cont = self.select(['yes', 'no'], "Continue?: ")
-                    # if cont == 'yes' and ans in self.ATT_DICT[k].keys():
-                    if ans in self.ATT_DICT[k].keys():
-                        value = self.ATT_DICT[k][ans]
-                        break
-                    else:
-                        print colored('Error: ', 'red') + \
-                            'please insert a valid %s' % k
-
-                print '\n%s: %s succesfully added' % \
-                    (colored('Valid', 'green'), k)
+            elif ans == 'go back':
+                value = k
                 break
+
+            else:
+                value = ans
+                break
+
+
+            # Insert existing
+            # elif ans == 'Insert existing':
+            #     completer = self.Completer(
+            #         self.ATT_DICT[k].keys())
+            #     readline.set_completer(completer.complete)
+            #     prompt = colored('\n[double tab for options]',
+            #                      'blue', attrs=['bold']) + '\nInsert %s:' % k
+
+                # while True:
+                #     ans = raw_input(prompt).lower()
+                #     # cont = self.select(['yes', 'no'], "Continue?: ")
+                #     # if cont == 'yes' and ans in self.ATT_DICT[k].keys():
+                #     if ans in self.ATT_DICT[k].keys():
+                #         value = self.ATT_DICT[k][ans]
+                #         break
+                #     else:
+                #         print colored('Error: ', 'red') + \
+                #             'please insert a valid %s' % k
+
+                # print '\n%s: %s succesfully added' % \
+                #     (colored('Valid', 'green'), k)
+                # break
         return value
 
     def update_attributes(self):
