@@ -91,18 +91,19 @@ class ecan_interface(cmd2.Cmd):
                 keys = self.ATT_KEYS
                 pos = 0
                 while True:
-                    for i, k in enumerate(keys[pos:]):
-                        ans = self.get_attributes(k)
+                    try:
+                        ans = self.get_attributes(keys[pos])
                         if ans != 'go back':
-                            item_att[k] = ans
+                            item_att[keys[pos]] = ans
+                            pos += 1
                         else:
-                            if i == 0:
+                            if pos == 0:
                                 pos = 0
                             else:
-                                pos = i-1
-                            break
-                    if i == len(keys):
+                                pos = pos - 1
+                    except IndexError:
                         break
+
                 # Ask for transparency
                 item_att['transparency'] = \
                     self.select(['yes', 'no'], "Is it transparent?: ")
@@ -241,7 +242,7 @@ class ecan_interface(cmd2.Cmd):
         while True:
             completer = self.Completer(['1', '2', '3'])
             readline.set_completer(completer.complete)
-            opts = [colored(e, 'blue', attrs=['bold'])
+            opts = [colored(e, 'blue')
                     for e in ['insert new', 'go back']]
             ans = self.select(opts +
                               self.ATT_DICT[k].keys(),
@@ -256,7 +257,7 @@ class ecan_interface(cmd2.Cmd):
                 self.do_insert(k)
 
             elif ans == 'go back':
-                value = 'go back'
+                value = ans
                 break
 
             else:
