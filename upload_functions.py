@@ -2,6 +2,7 @@ import io
 import requests
 from set_stepper import *
 import picamera
+import math
 
 
 def outputs(samples, steps, item_attributes, url):
@@ -73,7 +74,7 @@ def get_data(samples, item_attributes, url):
         camera.awb_gains = g
 
         # Record Data #
-        steps = int(512 / samples)
+        steps = int(math.ceil(512. / samples))
         camera.capture_sequence(
             outputs(samples, steps, item_attributes, url),
             'jpeg', use_video_port=True)
