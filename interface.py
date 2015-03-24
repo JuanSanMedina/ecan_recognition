@@ -160,7 +160,9 @@ class ecan_interface(cmd2.Cmd):
             print r.json()['result']
         else:
             while True:
-                identifier = self.select(str(sorted(float(self.UP_IT.keys()))),
+                keys = self.UP_IT.keys()
+                keys.sort(key=float)
+                identifier = self.select(keys,
                                          "Select object to delete: ")
                 ans = self.select(['yes', 'no'], "Continue?: ")
                 if ans == 'yes':
