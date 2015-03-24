@@ -100,7 +100,7 @@ class ecan_interface(cmd2.Cmd):
                             else:
                                 pos -= 1
                         else:
-                            item_att[keys[pos]] = self.ATT_DICT[keys[pos]][ans]
+                            item_att[keys[pos]] = self.ATT_[keys[pos]][ans]
                             pos += 1
                     except IndexError:
                         break
@@ -254,7 +254,7 @@ class ecan_interface(cmd2.Cmd):
             #     self.do_insert('-v ' + k)
 
             # Insert new
-            if ans == 'Insert new':
+            if ans == colored('Insert new', 'blue'):
                 self.do_insert(k)
 
             elif ans == 'go back':
