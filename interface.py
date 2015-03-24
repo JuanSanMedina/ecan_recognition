@@ -252,9 +252,8 @@ class ecan_interface(cmd2.Cmd):
             # # View existing
             # if ans == 'View existing':
             #     self.do_insert('-v ' + k)
-
             # Insert new
-            if ans == colored('Insert new', 'blue'):
+            if ans == colored('insert new', 'blue'):
                 self.do_insert(k)
 
             elif ans == 'go back':
