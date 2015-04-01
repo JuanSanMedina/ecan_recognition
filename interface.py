@@ -115,12 +115,11 @@ class ecan_interface(cmd2.Cmd):
                     # Check if gram scale and collect weight
                     if not same_package:
                         self.do_get_weight('return')
-
                         # Select number of samples
                         samples = self.select(['90', '180', '360'],
                                               'Select number of samples: ')
 
-                        # Confirm data package
+                    # Confirm data package
                     print '\nData package:'
                     print item_att
                     print 'Number of samples %s\n' % samples
@@ -157,7 +156,7 @@ class ecan_interface(cmd2.Cmd):
                                     pass
                                 else:
                                     item_att[ans] = value
-                    elif ans = 'yes':
+                    elif ans == 'yes':
                         same_package = True
 
                 # Csontinue data collection?
