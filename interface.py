@@ -121,12 +121,12 @@ class ecan_interface(cmd2.Cmd):
                                               'Select number of samples: ')
 
                         # Confirm data package
-                        print '\nData package:'
-                        print item_att
-                        print 'Number of samples %s\n' % samples
-                        attention = colored('Atention! ', 'yellow', attrs=['bold'])
-                        ans = self.select(['yes', 'no'],
-                                          attention + 'Confirm data-package?: ')
+                    print '\nData package:'
+                    print item_att
+                    print 'Number of samples %s\n' % samples
+                    attention = colored('Atention! ', 'yellow', attrs=['bold'])
+                    ans = self.select(['yes', 'no'],
+                                      attention + 'Confirm data-package?: ')
                     if ans == 'yes':
                         result = uf.get_data(int(samples), item_att, self.url)
                         self.UP_IT[item_att['identifier']] = 1
@@ -145,11 +145,11 @@ class ecan_interface(cmd2.Cmd):
                         same_package = False
                         break
                     elif ans == 'yes, but change field':
+                        same_package = True
                         while True:
-                            ans = self.select(self.ATT_KEYS + ['end'],
+                            ans = self.select(['end'] + self.ATT_KEYS,
                                                                   'what field?: ')
                             if ans == 'end':
-                                same_package = True
                                 break
                             else:
                                 value = self.get_attributes(ans)
@@ -157,7 +157,7 @@ class ecan_interface(cmd2.Cmd):
                                     pass
                                 else:
                                     item_att[ans] = value
-                    else:
+                    elif ans = 'yes':
                         same_package = True
 
                 # Csontinue data collection?
