@@ -139,11 +139,24 @@ class ecan_interface(cmd2.Cmd):
                         self.do_delete_object(item_att['identifier'])
 
                     # Run with same data_package?
-                    ans = self.select(['yes', 'no'],
+                    ans = self.select(['yes', 'no', 'yes, but change field'],
                                       'Run again with same attributes?: ')
                     if ans == 'no':
                         same_package = False
                         break
+                    elif ans == 'yes, but change field':
+                        while True:
+                            ans = self.select(self.ATT_KEYS + ['end'],
+                                                                  'what field?: ')
+                            if ans == 'end':
+                                same_package = True
+                                break
+                            else:
+                                value = self.get_attributes(ans)
+                                if value == colored('go back', 'blue'):
+                                    pass
+                                else:
+                                    item_att[ans] = value
                     else:
                         same_package = True
 
