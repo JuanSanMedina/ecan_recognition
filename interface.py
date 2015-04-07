@@ -249,7 +249,6 @@ class ecan_interface(cmd2.Cmd):
 
     def get_attributes(self, k):
         print '\nInsert %s:' % colored(k, 'blue', attrs=['bold'])
-
         while True:
             completer = self.Completer(['1', '2', '3'])
             readline.set_completer(completer.complete)
@@ -258,45 +257,14 @@ class ecan_interface(cmd2.Cmd):
             ans = self.select(opts +
                               self.ATT_DICT[k].keys(),
                               'Please select one option: ')
-
-            # # View existing
-            # if ans == 'View existing':
-            #     self.do_insert('-v ' + k)
-            # Insert new
             if ans == colored('insert new', 'blue'):
                 self.do_insert(k)
-
             elif ans == 'go back':
                 value = ans
                 break
-
             else:
                 value = self.ATT_DICT[k][ans]
                 break
-
-
-            # Insert existing
-            # elif ans == 'Insert existing':
-            #     completer = self.Completer(
-            #         self.ATT_DICT[k].keys())
-            #     readline.set_completer(completer.complete)
-            #     prompt = colored('\n[double tab for options]',
-            #                      'blue', attrs=['bold']) + '\nInsert %s:' % k
-
-                # while True:
-                #     ans = raw_input(prompt).lower()
-                #     # cont = self.select(['yes', 'no'], "Continue?: ")
-                #     # if cont == 'yes' and ans in self.ATT_DICT[k].keys():
-                #     if ans in self.ATT_DICT[k].keys():
-                #         value = self.ATT_DICT[k][ans]
-                #         break
-                #     else:
-                #         print colored('Error: ', 'red') + \
-                #             'please insert a valid %s' % k
-
-                # print '\n%s: %s succesfully added' % \
-                #     (colored('Valid', 'green'), k)
-                # break
         return value
 
     def update_attributes(self):
