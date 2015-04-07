@@ -93,7 +93,7 @@ class ecan_interface(cmd2.Cmd):
                 while True:
                     try:
                         ans = self.get_attributes(keys[pos])
-                        if ans ==  colored('go back', 'blue'):
+                        if ans == colored('go back', 'blue'):
                             if pos == 0:
                                 pos = 0
                             else:
@@ -133,8 +133,8 @@ class ecan_interface(cmd2.Cmd):
 
                     # delete previous?
                     ans = self.select(['yes', 'no'],
-                                      'delete previous?: ')
-                    if ans == 'yes':
+                                      'keep previous?: ')
+                    if ans == 'no':
                         self.do_delete_object(item_att['identifier'])
 
                     # Run with same data_package?
