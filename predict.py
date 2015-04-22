@@ -1,3 +1,4 @@
+import socket
 hostname = socket.gethostname()
 if hostname == 'CUSP-raspberrypi':
     import upload_functions as uf
