@@ -91,7 +91,7 @@ def get_preview(url):
     # Fix Camera Parameters #
     with picamera.PiCamera() as camera:
         camera.led = False
-        camera.resolution = (640, 480)
+        camera.resolution = (1024, 768)
         camera.iso = 200
         camera.framerate = 10
         time.sleep(2)
@@ -104,6 +104,28 @@ def get_preview(url):
         data = {'ecan': '1'}
         files = {'im': open('sample.jpg', 'rb')}
         url_preview = url + '/ecan/upload-sample/'
+        r = requests.post(url_preview, data=data, files=files)
+        print r.text
+    return 'done'
+
+
+def predict(url):
+    # Fix Camera Parameters #
+    with picamera.PiCamera() as camera:
+        camera.led = False
+        camera.resolution = (1024, 768)
+        camera.iso = 200
+        camera.framerate = 10
+        time.sleep(2)
+        camera.shutter_speed = camera.exposure_speed
+        camera.exposure_mode = 'off'
+        g = camera.awb_gains
+        camera.awb_mode = 'off'
+        camera.awb_gains = g
+        camera.capture('sample.jpg')
+        data = {'ecan': '1'}
+        files = {'im': open('sample.jpg', 'rb')}
+        url_preview = url + '/ecan/predict/'
         r = requests.post(url_preview, data=data, files=files)
         print r.text
     return 'done'
