@@ -1,7 +1,6 @@
 
 """Defines a CLI to obtain images of an object on a rotating platform."""
 
-
 from termcolor import colored
 import cmd2
 import io
@@ -13,11 +12,46 @@ import RPi.GPIO as GPIO
 import socket
 import stepper
 import time
+import usb
 import weight
 
 
-def outputs(samples, steps, item_attributes, url):
-    """Record streams of images."""
+def get_weight():
+    """Get weight of USB scale."""
+    VENDOR_ID = 0x0922
+    PRODUCT_ID = 0x8004
+
+    # find the USB device
+    device = usb.core.find(idVendor=VENDOR_ID, idProduct=PRODUCT_ID)
+    if device.is_kernel_driver_active(0): device.detach_kernel_driver(0)
+
+    # use the first/default configuration
+    device.set_configuration()
+
+    # first endpoint
+    endpoint = device[0][(0, 0)][0]
+
+    # read a data packet
+    attempts = 10
+    data = None
+
+    while data is None and attempts > 0:
+        try:
+            data = \
+                device.read(endpoint.bEndpointAddress, endpoint.wMaxPacketSize)
+        except usb.core.USBError as e:
+            data = None
+            if e.args == ('Operation timed out',):
+                attempts -= 1
+                continue
+
+    raw_weight = data[4] + data[5] * 256
+    device.detach_kernel_driver(0)
+    return float(raw_weight)
+
+
+def upload_images(samples, steps, item_attributes, url):
+    """Upload images from object."""
     global start
     url_item = url + '/ecan/upload/'
     url_bg = url + '/ecan/upload-back_ground/'
@@ -53,7 +87,7 @@ def outputs(samples, steps, item_attributes, url):
             while cont != '1':
                 cont = raw_input("ready? [1] ")
                 if cont == '1':
-                    item_attributes['weight'] = weight.get()
+                    item_attributes['weight'] = get_weight()
                 if cont != '1':
                     cont = 'n'
             start = time.time()
@@ -90,7 +124,7 @@ def get_data(samples, item_attributes, url):
         # Record Data #
         steps = int(math.ceil(512. / samples))
         camera.capture_sequence(
-            outputs(samples, steps, item_attributes, url),
+            upload_images(samples, steps, item_attributes, url),
             'jpeg', use_video_port=True)
         finish = time.time()
         print'Captured %s' % samples + ' images in %.2fs' % (finish - start)
@@ -150,7 +184,6 @@ class EcanInterface(cmd2.Cmd):
 
     # Set GPIOs and url
     url = 'http://128.122.72.105:8000'
-    # url = 'http://127.0.0.1:8000'
 
     # Class variables
     ATT_KEYS = ['logo', 'shape', 'material', 'common_name']
@@ -368,7 +401,7 @@ class EcanInterface(cmd2.Cmd):
         """Get weight."""
         while True:
             try:
-                w = weight.get()
+                w = get_weight()
                 print '\nCurrent weight %s:' % \
                     colored(w, 'blue', attrs=['bold'])
                 ans = self.select(['yes', 'no'],
