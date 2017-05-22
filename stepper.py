@@ -1,8 +1,12 @@
+
+"""Define utils to control a stepper motor."""
+
 import RPi.GPIO as GPIO
 import time
 
 
 def set_gpio():
+    """Set gpio ports to be used."""
     GPIO.setmode(GPIO.BCM)
     enable_pin = 23
     coil_A_1_pin = 4
@@ -18,6 +22,7 @@ def set_gpio():
 
 
 def forward(delay, steps):
+    """Move forward."""
     delay = int(delay) / 1000.0
     steps = int(steps)
     for i in range(0, steps):
@@ -32,6 +37,7 @@ def forward(delay, steps):
 
 
 def backwards(delay, steps):
+    """Move backwards."""
     delay = int(delay) / 1000.0
     steps = int(steps)
     for i in range(0, steps):
@@ -46,6 +52,7 @@ def backwards(delay, steps):
 
 
 def setStep(w1, w2, w3, w4):
+    """Set coil voltages."""
     coil_A_1_pin = 4
     coil_A_2_pin = 17
     coil_B_1_pin = 27

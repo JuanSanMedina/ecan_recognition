@@ -1,19 +1,151 @@
-import time
-import readline
-import cmd2
-import requests
+
+"""Defines a CLI to obtain images of an object on a rotating platform."""
+
+
 from termcolor import colored
+import cmd2
+import io
+import math
+import picamera
+import readline
+import requests
+import RPi.GPIO as GPIO
 import socket
-
-hostname = socket.gethostname()
-if hostname == 'CUSP-raspberrypi':
-    import weight
-    import RPi.GPIO as GPIO
-    import set_stepper as stepper
-    import upload_functions as uf
+import stepper
+import time
+import weight
 
 
-class ecan_interface(cmd2.Cmd):
+def outputs(samples, steps, item_attributes, url):
+    """Record streams of images."""
+    global start
+    url_item = url + '/ecan/upload/'
+    url_bg = url + '/ecan/upload-back_ground/'
+
+    # Take photo of background #
+    cont = 'n'
+    print 'Prepare for back_ground capture'
+
+    while cont != '1':
+        cont = raw_input("ready? [1] ")
+        if cont != '1':
+            cont = 'n'
+
+    # Start Camara Streaming #
+    stream = io.BytesIO()
+    for i in range(samples + 4):
+        yield stream
+        stream.seek(0)
+        if i == 0:
+            my_file_bg = stream
+            data_bg = {'ecan': '1'}
+            files_bg = {'im': my_file_bg}
+            r = requests.post(url_bg, data=data_bg, files=files_bg)
+            if r.json()['result'] == 'valid':
+                bg_pk = r.json()['id']
+                print r.json()['result'], 'back_ground id: ', r.json()['id']
+            else:
+                print 'Operation not completed'
+
+            # Place Item and upload data #
+            print 'Place item'
+            cont = 'n'
+            while cont != '1':
+                cont = raw_input("ready? [1] ")
+                if cont == '1':
+                    item_attributes['weight'] = weight.get()
+                if cont != '1':
+                    cont = 'n'
+            start = time.time()
+        elif i > 3:
+            my_file = stream
+            item_attributes['bg'] = bg_pk
+            item_attributes['ecan'] = '1'
+            data_item = item_attributes
+            files_item = {'im': my_file}
+            r = requests.post(
+                url_item, data=data_item, files=files_item)
+            print r.text
+            stepper.forward(20, steps)
+        stream.truncate(0)
+        stream.seek(0)
+
+
+def get_data(samples, item_attributes, url):
+    """Get images for currect object."""
+    with picamera.PiCamera() as camera:
+        camera.led = False
+        global start
+        start = 0
+        camera.resolution = (1024, 768)
+        camera.iso = 200
+        camera.framerate = 10
+        time.sleep(2)
+        camera.shutter_speed = camera.exposure_speed
+        camera.exposure_mode = 'off'
+        g = camera.awb_gains
+        camera.awb_mode = 'off'
+        camera.awb_gains = g
+
+        # Record Data #
+        steps = int(math.ceil(512. / samples))
+        camera.capture_sequence(
+            outputs(samples, steps, item_attributes, url),
+            'jpeg', use_video_port=True)
+        finish = time.time()
+        print'Captured %s' % samples + ' images in %.2fs' % (finish - start)
+
+    return "done"
+
+
+def get_preview(url):
+    """Get preview of current image."""
+    with picamera.PiCamera() as camera:
+        camera.led = False
+        camera.resolution = (1024, 768)
+        camera.iso = 200
+        camera.framerate = 10
+        time.sleep(2)
+        camera.shutter_speed = camera.exposure_speed
+        camera.exposure_mode = 'off'
+        g = camera.awb_gains
+        camera.awb_mode = 'off'
+        camera.awb_gains = g
+        camera.capture('sample.jpg')
+        data = {'ecan': '1'}
+        files = {'im': open('sample.jpg', 'rb')}
+        url_preview = url + '/ecan/upload-sample/'
+        r = requests.post(url_preview, data=data, files=files)
+        print r.text
+
+    return "done"
+
+
+def predict(url):
+    """Take picture and predict class."""
+    with picamera.PiCamera() as camera:
+        camera.led = False
+        camera.resolution = (1024, 768)
+        camera.iso = 200
+        camera.framerate = 10
+        time.sleep(2)
+        camera.shutter_speed = camera.exposure_speed
+        camera.exposure_mode = 'off'
+        g = camera.awb_gains
+        camera.awb_mode = 'off'
+        camera.awb_gains = g
+        camera.capture('sample.jpg')
+        data = {'ecan': '1'}
+        files = {'im': open('sample.jpg', 'rb')}
+        url_preview = url + '/ecan/predict/'
+        r = requests.post(url_preview, data=data, files=files)
+        print(r.text)
+
+    return "done"
+
+
+class EcanInterface(cmd2.Cmd):
+
     """Ecan Command Line Interface Application."""
 
     # Set GPIOs and url
@@ -33,11 +165,15 @@ class ecan_interface(cmd2.Cmd):
     # Uploaded items in session
     UP_IT = {}
 
-    @cmd2.options([cmd2.make_option('-v', '--view',
-                                    action="store_true",
-                                    help="view current values and exit")])
+    @cmd2.options([
+        cmd2.make_option(
+            '-v', '--view', action="store_true", help="view current values."
+            )
+        ])
     def do_insert(self, arg, opts=None):
-        """Insert a new item attribute to database
+        """
+        Insert a new item attribute to database.
+
         Keyword arguments:
         logo -- add new logo (default 0.0)
         shape -- add new shape (default 0.0)
@@ -69,10 +205,9 @@ class ecan_interface(cmd2.Cmd):
                 return
 
     def do_upload(self, arg):
-        """Data collection function
-        Gets no arguments neither options
-        """
+        """Data collection function."""
         same_package = False
+
         try:
             # Start process
             while True:
@@ -127,7 +262,7 @@ class ecan_interface(cmd2.Cmd):
                     ans = self.select(['yes', 'no'],
                                       attention + 'Confirm data-package?: ')
                     if ans == 'yes':
-                        result = uf.get_data(int(samples), item_att, self.url)
+                        result = get_data(int(samples), item_att, self.url)
                         self.UP_IT[item_att['identifier']] = 1
                         print result
 
@@ -146,8 +281,9 @@ class ecan_interface(cmd2.Cmd):
                     elif ans == 'yes, but change field':
                         same_package = True
                         while True:
-                            ans = self.select(['end'] + self.ATT_KEYS,
-                                                                  'what field?: ')
+                            ans = self.select(
+                                ['end'] + self.ATT_KEYS, 'what field?: ')
+
                             if ans == 'end':
                                 break
                             else:
@@ -156,6 +292,7 @@ class ecan_interface(cmd2.Cmd):
                                     pass
                                 else:
                                     item_att[ans] = value
+
                     elif ans == 'yes':
                         same_package = True
 
@@ -166,20 +303,21 @@ class ecan_interface(cmd2.Cmd):
                 else:
                     readline.set_completer(self.complete)
                     break
-        except:
+
+        except Exception:
             readline.set_completer(self.complete)
 
     def do_take_preview(self, arg=None):
-        """Run to take an ecan preview"""
+        """Run to take an ecan preview."""
         while True:
             ans = self.select(['yes', 'no'], "Take?: ")
             if ans == 'yes':
-                uf.get_preview(self.url)
+                get_preview(self.url)
             elif ans == 'no':
                 break
 
     def do_delete_object(self, arg=None):
-        """Run to take an ecan preview"""
+        """Run to take an ecan preview."""
         if arg:
             data = {'identifier': arg}
             r = requests.get(self.url + '/ecan/delete_object/',
@@ -203,7 +341,7 @@ class ecan_interface(cmd2.Cmd):
                     break
 
     def upload_insert(self, arg):
-        # Ask for new value
+        """Ask for new value."""
         while True:
             ans = raw_input('\nEnter %s: ' % arg).lower().replace(' ', '_')
             cont = self.select(['yes', 'no'],
@@ -227,6 +365,7 @@ class ecan_interface(cmd2.Cmd):
                                 attrs=['bold']) for e in d.keys())
 
     def do_get_weight(self, arg=None):
+        """Get weight."""
         while True:
             try:
                 w = weight.get()
@@ -248,6 +387,7 @@ class ecan_interface(cmd2.Cmd):
                     break
 
     def get_attributes(self, k):
+        """Get attributes."""
         print '\nInsert %s:' % colored(k, 'blue', attrs=['bold'])
         while True:
             completer = self.Completer(['1', '2', '3'])
@@ -268,13 +408,14 @@ class ecan_interface(cmd2.Cmd):
         return value
 
     def update_attributes(self):
-            """Update database attributes"""
-            for k in self.ATT_KEYS:
-                data = {'action': 'view', 'att_key': k}
-                d = requests.post(self.url + '/ecan/insert/', data).json()
-                self.ATT_DICT[k] = eval(d['dictionary'])
+        """Update database attributes."""
+        for k in self.ATT_KEYS:
+            data = {'action': 'view', 'att_key': k}
+            d = requests.post(self.url + '/ecan/insert/', data).json()
+            self.ATT_DICT[k] = eval(d['dictionary'])
 
     def complete_insert(self, text, line, begidx, endidx):
+        """Complete insert."""
         if not text:
             completions = self.ATT_KEYS
         else:
@@ -285,6 +426,8 @@ class ecan_interface(cmd2.Cmd):
         return completions
 
     class Completer:
+
+        """I have no clue what I did this for."""
 
         def __init__(self, completions):
             self.completions = completions
@@ -297,20 +440,20 @@ class ecan_interface(cmd2.Cmd):
                     else:
                         state -= 1
 
-    def do_EOF(self, line):
-        return True
-
     def select(self, options, prompt='Your choice? '):
-        """Presents a numbered menu to the user.  Modelled after
-           the bash shell's SELECT.  Returns the item chosen.
+        """
+        Present a numbered menu to the user.
 
-           Argument ``options`` can be:
+        Modelled after the bash shell's SELECT.  Returns the item chosen.
 
-             | a single string -> will be split into one-word options
-             | a list of strings -> will be offered as options
-             | a list of tuples -> interpreted as (value, text), so
-                                   that the return value can differ from
-                                   the text advertised to the user """
+        Argument ``options`` can be:
+
+         | a single string -> will be split into one-word options
+         | a list of strings -> will be offered as options
+         | a list of tuples -> interpreted as (value, text), so
+                               that the return value can differ from
+                               the text advertised to the user
+        """
         if isinstance(options, basestring):
             options = zip(options.split(), options.split())
         fulloptions = []
@@ -325,10 +468,10 @@ class ecan_interface(cmd2.Cmd):
         flag = True
         for (idx, (value, text)) in enumerate(fulloptions):
             if flag:
-                self.poutput('\n  %2d. %s\n' % (idx+1, text))
+                self.poutput('\n  %2d. %s\n' % (idx + 1, text))
                 flag = False
             else:
-                self.poutput('  %2d. %s\n' % (idx+1, text))
+                self.poutput('  %2d. %s\n' % (idx + 1, text))
         while True:
             response = raw_input(prompt)
             try:
@@ -336,14 +479,12 @@ class ecan_interface(cmd2.Cmd):
                 result = fulloptions[response - 1][0]
                 break
             except ValueError:
-                pass # loop and ask again
+                pass  # loop and ask again
         return result
 
+
 if __name__ == '__main__':
-    if hostname == 'CUSP-raspberrypi':
-        stepper.set_gpio()
 
-    ecan_interface().cmdloop()
-
-    if hostname == 'CUSP-raspberrypi':
-        GPIO.cleanup()
+    stepper.set_gpio()
+    EcanInterface().cmdloop()
+    GPIO.cleanup()

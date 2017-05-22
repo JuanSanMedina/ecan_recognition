@@ -1,13 +1,3 @@
-# PIL==1.1.7
-# mcpi==0.1.1
-# numpy==1.6.2
-# pifacedigitalio==3.0.4
-# pifacecommon==4.0.0
-# stevedore==1.3.0
-# wsgiref==0.1.2
-# pygame==1.9.1
-# six==1.9.0
-# pygobject==3.8.2
 cmd2==0.6.8
 pbr==0.10.8
 picamera==1.8
